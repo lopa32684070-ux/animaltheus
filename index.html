@@ -249,6 +249,37 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 .pc p{margin:10px 0 16px;color:#cdbfee;line-height:1.6;overflow-wrap:anywhere}
 #lightbox{z-index:95;cursor:zoom-out}#lightbox img{max-width:94vw;max-height:88vh;border-radius:16px;box-shadow:0 20px 60px #000a}
 </style>
+<style>
+/* ===== v7: vida própria ===== */
+.today{background:linear-gradient(180deg,#170a35,#1d0e40)}
+.streak{display:inline-flex;gap:8px;align-items:center;padding:10px 16px;border-radius:999px;background:#2a1560;border:1px solid #46298a;color:#ffe48a;font:700 13px var(--display)}
+.streak b{font-size:20px;color:var(--yellow)}
+.today-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.tcard{background:#241247;border:1px solid #46298a;border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:10px;box-shadow:0 14px 40px #0006}
+.tcard h3{margin:0;font:800 17px var(--display);color:#fff}
+.tcard p{margin:0;color:#d6caf2;line-height:1.65}
+.tc-face{width:56px;height:56px;border-radius:18px;overflow:hidden;border:2px solid var(--yellow);display:block}.tc-face svg{width:100%;height:100%;display:block}
+.tcard .btn{align-self:flex-start;margin-top:auto}
+.quiz-prog{color:#a897d0;font-size:12px;font-weight:700}
+.quiz-opts{display:grid;gap:8px;margin-top:4px}
+.quiz-opts button{text-align:left;padding:11px 14px;border-radius:13px;border:1px solid #46298a;background:#1a0d3c;color:#efe7ff;font:600 14px var(--font);transition:border-color .15s,background .15s}
+.quiz-opts button:not(:disabled):hover{border-color:var(--yellow)}
+.quiz-opts button.ok{background:#12452f;border-color:#3ecf8e;color:#c8ffe6}
+.quiz-opts button.no{background:#4a1530;border-color:#ff6f95;color:#ffd0dc}
+.quiz-exp{font-size:13px;color:#cdbfee;line-height:1.6}
+.guide{background:#170a35}
+.guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.guide details{background:#241247;border:1px solid #46298a;border-radius:18px;padding:0;overflow:hidden}
+.guide summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:16px 18px;font:800 15px var(--display);color:#fff}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary:after{content:"+";margin-left:auto;color:var(--yellow);font-size:22px;line-height:1}
+.guide details[open] summary:after{content:"–"}
+.guide details[open]{border-color:#7a4de0;background:#2a1560}
+.g-face{flex:0 0 36px;height:36px;border-radius:12px;overflow:hidden}.g-face svg{width:100%;height:100%;display:block}
+.guide ul{margin:0;padding:0 20px 18px 38px;color:#d6caf2;line-height:1.7;font-size:14px}
+.guide-note{margin-top:16px;color:#a897d0;font-size:12.5px}
+@media(max-width:860px){.today-grid,.guide-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
@@ -311,7 +342,7 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 <header class="topbar">
  <div class="container topbar-inner">
   <a class="brand" href="#inicio" aria-label="AnimalTheus, início"><img class="brand-img" src="data:image/jpeg;base64,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" alt="Foto do canal AnimalTheus"><span class="brand-name">ANIMALTHEUS<span>Comunidade das aves</span></span></a>
-  <nav class="nav" id="main-nav"><a href="#inicio">Início</a><a href="#comunidade">Comunidade</a><a href="#sobre">Sobre o projeto</a><a href="https://www.youtube.com/@animaltheus" target="_blank" rel="noopener noreferrer">Canal no YouTube<svg class="icon" style="width:13px;height:13px;margin-left:3px"><use href="#i-arrow"/></svg></a></nav>
+  <nav class="nav" id="main-nav"><a href="#inicio">Início</a><a href="#hoje">Hoje</a><a href="#comunidade">Comunidade</a><a href="#guia">Guia</a><a href="#sobre">Sobre o projeto</a><a href="https://www.youtube.com/@animaltheus" target="_blank" rel="noopener noreferrer">Canal no YouTube<svg class="icon" style="width:13px;height:13px;margin-left:3px"><use href="#i-arrow"/></svg></a></nav>
   <div class="nav-actions"><button class="btn btn-primary btn-sm" id="nav-create"><svg class="icon"><use href="#i-plus"/></svg> Criar tópico</button><button class="nav-avatar" id="nav-profile" type="button" aria-label="Editar meu perfil" title="Meu perfil"></button><button class="mobile-menu" id="mobile-menu" aria-label="Abrir menu"><svg class="icon"><use href="#i-menu"/></svg></button></div>
  </div>
 </header>
@@ -338,6 +369,9 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 <article class="howto-card"><span class="howto-ico"><svg class="icon"><use href="#i-chat"/></svg></span><div><b>Converse em tempo real</b><p>Mande mensagens e veja as respostas da turma chegarem na hora.</p></div></article>
 <article class="howto-card"><span class="howto-ico"><svg class="icon"><use href="#i-camera"/></svg></span><div><b>Mostre o seu cantinho</b><p>Conte histórias, compartilhe ideias e aprenda a cuidar melhor.</p></div></article>
 </div></div></section>
+<section class="section today" id="hoje"><div class="container">
+<div class="section-head"><div><span class="eyebrow">Sempre tem novidade</span><h2 class="section-title">Hoje no poleiro</h2><p class="section-copy">Uma dica, uma pergunta e um quiz novos todos os dias. Mesmo quando está quieto por aqui, sempre tem o que fazer.</p></div><div class="streak" id="streak"></div></div>
+<div class="today-grid"><article class="tcard" id="tip-card"></article><article class="tcard" id="q-card"></article><article class="tcard" id="quiz-card"></article></div></div></section>
 <section class="section community" id="comunidade"><div class="container">
  <div class="section-head"><div><span class="eyebrow">O ponto de encontro</span><h2 class="section-title">Puxe uma cadeira no poleiro.</h2><p class="section-copy">Abra um tópico, mande sua mensagem e participe das conversas da comunidade.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div class="chat-status"><span class="live-dot" id="status-dot"></span><span id="connection-label">Demonstração interativa</span></div><button type="button" class="btn btn-yellow btn-sm" id="open-full"><svg class="icon"><use href="#i-expand"/></svg> Chat em tela cheia</button></div></div>
  <div class="mode-banner" id="mode-banner"><svg class="icon"><use href="#i-info"/></svg><span><strong>Modo de demonstração.</strong> Você já pode testar tópicos e mensagens neste aparelho. Configure o Firebase para compartilhar tudo com outras pessoas.</span><button id="setup-hint">Como conectar</button></div>
@@ -350,6 +384,7 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
   <section class="conversation-panel" aria-label="Conversa selecionada"><div id="conversation-content" style="display:flex;flex-direction:column;flex:1;min-height:0"><div class="no-topic"><svg class="icon"><use href="#i-chat"/></svg><h4>Escolha uma conversa</h4><p>Selecione um tópico à esquerda para ler e enviar mensagens.</p></div></div></section>
  </div>
 </div></section>
+<section class="section guide" id="guia"><div class="container"><div class="section-head"><div><span class="eyebrow">Para consultar quando quiser</span><h2 class="section-title">Guia do poleiro</h2><p class="section-copy">Cuidados básicos com periquitos e outras aves, em poucas linhas.</p></div></div><div class="guide-grid"><details><summary><span class="g-face" data-face="verquito"></span>Alimentação</summary><ul><li>Ofereça sementes de boa qualidade ou ração própria para a espécie.</li><li>Complete com folhas bem lavadas (couve, rúcula) e alguns legumes e frutas.</li><li>Evite abacate, chocolate, cafeína, álcool e comida salgada ou temperada.</li></ul></details><details><summary><span class="g-face" data-face="azulita"></span>Água e banho</summary><ul><li>Troque a água todo dia e lave o bebedouro.</li><li>Uma bandeja rasa ou um borrifador suave pode servir de banho, se a ave gostar.</li><li>Nunca force o banho e evite correntes de ar depois.</li></ul></details><details><summary><span class="g-face" data-face="nevasca"></span>Sono e rotina</summary><ul><li>Periquitos costumam precisar de 10 a 12 horas de sono por noite.</li><li>Um ambiente calmo e com pouca luz à noite ajuda a ave a descansar.</li><li>Rotina previsível deixa a ave mais tranquila.</li></ul></details><details><summary><span class="g-face" data-face="azulita"></span>Gaiola e brinquedos</summary><ul><li>Quanto mais espaço, melhor. A ave precisa abrir as asas sem bater nas grades.</li><li>Use poleiros de tamanhos e texturas variados.</li><li>Ofereça brinquedos de roer e troque alguns de tempos em tempos.</li></ul></details><details><summary><span class="g-face" data-face="nevasca"></span>Sinais de alerta</summary><ul><li>Penas arrepiadas por muito tempo, apatia ou ficar no fundo da gaiola.</li><li>Falta de apetite, fezes muito diferentes do normal ou dificuldade para respirar.</li><li>Nesses casos, procure um veterinário de aves sem esperar.</li></ul></details><details><summary><span class="g-face" data-face="verquito"></span>Perigos em casa</summary><ul><li>Panelas antiaderentes superaquecidas soltam fumaça que pode ser fatal para aves.</li><li>Aerossóis, velas perfumadas e incenso irritam a respiração das aves.</li><li>Cuidado com janelas abertas, ventiladores ligados e outros animais soltos.</li></ul></details><details><summary><span class="g-face" data-face="verquito"></span>Convivência e carinho</summary><ul><li>Na natureza, periquitos vivem em bando. Conversar e brincar com a ave todo dia faz diferença.</li><li>Vá devagar: confiança se constrói com paciência.</li><li>Respeite o ritmo da ave e evite agarrá-la à força.</li></ul></details><details><summary><span class="g-face" data-face="nevasca"></span>Primeiros dias da ave nova</summary><ul><li>Deixe a ave se acostumar com a casa em um canto calmo.</li><li>Fale baixo, evite movimentos bruscos e não faça visitas barulhentas nos primeiros dias.</li><li>Marque uma consulta com um veterinário de aves para um check-up inicial.</li></ul></details></div><p class="guide-note">Informação geral. Cada ave é diferente, então converse sempre com um veterinário de aves.</p></div></section>
 <section class="section" id="sobre"><div class="container about-grid"><div class="about-visual">
  <div class="trio" id="trio"></div><div class="about-tag">Verquito aprova esse encontro.</div></div>
  <div class="about-copy"><span class="eyebrow">Mais que um chat</span><h2 class="section-title">Feita para quem tem penas no coração.</h2><p class="section-copy">A AnimalTheus nasceu do amor pelas aves. A ideia é reunir pessoas para trocar experiências, compartilhar fotos e aprender umas com as outras, sempre com responsabilidade e carinho pelos nossos companheiros.</p><div class="about-points"><div class="about-point"><span class="point-check"><svg class="icon"><use href="#i-check"/></svg></span>Conversas organizadas em tópicos por assunto.</div><div class="about-point"><span class="point-check"><svg class="icon"><use href="#i-check"/></svg></span>Espaço para tirar dúvidas e dividir experiências.</div><div class="about-point"><span class="point-check"><svg class="icon"><use href="#i-check"/></svg></span>Identidade roxa e amarela, com o Verquito por perto.</div></div><a class="btn btn-primary" href="https://www.youtube.com/@animaltheus" target="_blank" rel="noopener noreferrer">Acompanhar AnimalTheus <svg class="icon"><use href="#i-external"/></svg></a></div>
@@ -521,6 +556,56 @@ function drawTopicItems(host,list){
  if(dirty)store.setItem(SEEN_KEY,JSON.stringify(seen));
 }
 function toggleFav(id){const f=getFavs(),i=f.indexOf(id);i>=0?f.splice(i,1):f.push(id);store.setItem(FAV_KEY,JSON.stringify(f));drawTopics();}
+/* ===== v7: vida própria ===== */
+const dayN=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5);
+const TIPS=['Água fresca todo dia, e lave o bebedouro. Água parada atrai bactérias.','Periquitos costumam precisar de 10 a 12 horas de sono. Um cantinho calmo e com pouca luz à noite ajuda muito.','Folhas bem lavadas, como couve e rúcula, são uma ótima forma de variar o cardápio.','Brinquedos de roer ajudam a gastar energia. Troque alguns de tempos em tempos para não enjoar.','Ave precisa de atenção diária: converse, ofereça brinquedos e deixe explorar em um ambiente seguro.','Fumaça de panela antiaderente superaquecida pode ser fatal para aves. Mantenha a ave longe da cozinha.','Abacate, chocolate, café e álcool fazem mal às aves. Na dúvida, não ofereça.','Penas arrepiadas por muito tempo, apatia e falta de apetite pedem um veterinário de aves.','Uma bandeja rasa com água ou um borrifador suave pode servir de banho, se a ave gostar.','Poleiros de diâmetros e texturas variados fazem bem para os pés.','Ave nova em casa precisa de calma nos primeiros dias. Fale baixo e vá devagar.','Aerossol, vela perfumada e incenso irritam a respiração das aves. Mantenha longe delas.'];
+const QDIA=['Qual é o nome e o jeitinho do seu periquito?','Qual é a comida favorita da sua ave?','Qual é o cantinho preferido da sua ave em casa?','Qual é o barulhinho mais engraçado que ela faz?','Como foi o dia em que sua ave chegou?','Qual brinquedo ela mais ama?','Como você escolheu o nome da sua ave?','Sua ave imita sons ou fala alguma coisa?','Qual é a melhor mania da sua ave?','Que conselho você daria a quem vai ter a primeira ave?'];
+const QUIZ=[
+ {q:'Quantas horas de sono um periquito costuma precisar por noite?',o:['4 a 6 horas','10 a 12 horas','16 horas'],a:1,e:'Dormir bem faz diferença na saúde e no humor. Um ambiente calmo e escuro ajuda.'},
+ {q:'Qual destes alimentos faz mal às aves?',o:['Abacate','Couve lavada','Painço'],a:0,e:'Abacate é tóxico para aves. Chocolate, café e álcool também devem ficar longe.'},
+ {q:'Com que frequência a água do bebedouro deve ser trocada?',o:['Uma vez por semana','Quando acabar','Todos os dias'],a:2,e:'Água fresca todo dia, e o bebedouro precisa ser lavado.'},
+ {q:'Ave quieta, arrepiada e no fundo da gaiola por horas. O que fazer?',o:['Esperar uma semana','Procurar um veterinário de aves','Dar remédio de casa'],a:1,e:'Aves escondem sinais de doença. Quando mostram, o caso pode já ser sério.'},
+ {q:'A fumaça de panela antiaderente superaquecida é perigosa para aves?',o:['Sim, pode ser fatal','Não, é inofensiva','Só para filhotes'],a:0,e:'Mantenha as aves longe da cozinha e evite utensílios antiaderentes muito quentes.'},
+ {q:'Como os periquitos australianos vivem na natureza?',o:['Sempre sozinhos','Em bandos','Só em casais fixos'],a:1,e:'Por viverem em bando, eles gostam de companhia e interação.'}];
+const MREP=[
+ [/doente|doenca|fofad|arrepiad|vomit|diarre|sangue|nao come|parad|apatic|machuc/,'nevasca','Sinto muito. Ave arrepiada, quieta ou sem comer merece atenção rápida: procure um veterinário de aves. Eu sou só um mascote e não substituo uma consulta.'],
+ [/filhote|ovo|ninho|casal|reprodu/,'azulita','Ninhada é coisa séria: pede planejamento e orientação de um veterinário ou criador responsável. Como está o casal?'],
+ [/semente|racao|comida|aliment|fruta|verdura|painco|legume/,'azulita','Variedade faz bem: sementes de boa qualidade ou ração própria, folhas bem lavadas e alguns legumes. Evite abacate, chocolate, cafeína, álcool e sal. E água fresca todo dia!'],
+ [/gaiola|viveiro|poleiro|brinquedo|espaco/,'azulita','Espaço de sobra, poleiros variados e brinquedos de roer deixam a vida mais divertida. Troque alguns brinquedos de tempos em tempos.'],
+ [/banho|banhar|molh/,'verquito','Banho é uma festa! Uma bandeja rasa ou um borrifador suave pode servir, mas só se a ave gostar. Nunca force.'],
+ [/dormir|sono|noite|barulho|grit|cantar/,'nevasca','Periquitos costumam precisar de 10 a 12 horas de sono, em ambiente calmo e com pouca luz. Gritaria às vezes é pedido de companhia.'],
+ [/foto|apresent|chegou|novo|nova|nome/,'verquito','Que legal! Conta mais: nome, cor, jeitinho. E manda uma foto pelo botão da câmera!'],
+ [/\boi\b|ola|bom dia|boa tarde|boa noite|eai/,'verquito','Oi, oi! Bem-vindo ao poleiro! Conta aí: qual ave você tem?']];
+const ghosts={};let lastGhost=0;
+const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function mergedMsgs(){return activeMessages.concat(ghosts[activeTopicId]||[]).sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0));}
+function maybeMascotReply(tid,text){
+ if(!tid||stickerOf(text))return;const now=Date.now();
+ if(now-lastGhost<45000)return;
+ if(activeMessages.some(x=>x.userId!==currentUid&&!x.ghost&&now-(Number(x.createdAt)||0)<9e5))return;
+ const t=norm(text),hit=MREP.find(x=>x[0].test(t))||[0,'verquito','Boa! Conta mais. Alguém da turma deve aparecer logo, e eu fico por aqui até lá.'];
+ lastGhost=now;const m=MASC[hit[1]];
+ setTimeout(()=>{(ghosts[tid]=ghosts[tid]||[]).push({id:'g'+Date.now(),ghost:1,text:hit[2],userName:m.n,userId:'mascot-'+hit[1],userMascot:hit[1],userBio:'Mascote da comunidade. Eu respondo quando está quieto por aqui. Sou uma resposta automática, não uma pessoa.',createdAt:Date.now()});if(activeTopicId===tid)drawMessages();},1800);
+}
+(function wireV7(){
+ const d=dayN(),mk=MKEYS[d%3],m=MASC[mk];
+ $$('[data-face]').forEach(e=>e.innerHTML=faceSVG(e.dataset.face));
+ $('#tip-card').innerHTML=`<span class="tc-face">${faceSVG(mk)}</span><h3>Dica d${m.art} ${m.n}</h3><p>${TIPS[d%TIPS.length]}</p>`;
+ const qk=MKEYS[(d+1)%3];
+ $('#q-card').innerHTML=`<span class="tc-face">${faceSVG(qk)}</span><h3>Pergunta do dia</h3><p>${QDIA[d%QDIA.length]}</p><button type="button" class="btn btn-yellow btn-sm" id="q-go">Responder na comunidade</button>`;
+ $('#q-go').addEventListener('click',()=>{const q=QDIA[d%QDIA.length];$('#comunidade').scrollIntoView({behavior:'smooth'});if(!activeTopicId&&topics[0])selectTopic(topics[0].id);setTimeout(()=>{const i=$('#message-input');if(i){i.placeholder=q;i.focus({preventScroll:true});}},450);});
+ const st=jget('animaltheus_streak_v1',{day:0,n:0});if(st.day!==d){st.n=st.day===d-1?st.n+1:1;st.day=d;store.setItem('animaltheus_streak_v1',JSON.stringify(st));}
+ $('#streak').innerHTML=`${icon('seed',20)}<span><b>${st.n}</b> ${st.n===1?'dia':'dias seguidos'} no poleiro</span>`;
+ const idx=[0,1,2].map(i=>(d*3+i)%QUIZ.length),box=$('#quiz-card');let step=0,score=0;
+ const done=jget('animaltheus_quiz_v1',{day:0,score:0});
+ const end=sc=>{box.innerHTML=`<span class="tc-face">${faceSVG(MKEYS[(d+2)%3])}</span><h3>Quiz de hoje: ${sc} de 3</h3><p>${sc===3?'Mandou muito bem! Você entende de aves.':sc>=1?'Boa! Amanhã tem quiz novo para você melhorar.':'Sem problema, a gente aprende junto. Volte amanhã!'}</p>`;};
+ const show=()=>{const q=QUIZ[idx[step]];box.innerHTML=`<div class="quiz-prog">Quiz do dia · pergunta ${step+1} de 3</div><h3>${q.q}</h3><div class="quiz-opts">${q.o.map((o,i)=>`<button type="button" data-o="${i}">${o}</button>`).join('')}</div><div class="quiz-exp" id="quiz-exp"></div>`;
+  $$('.quiz-opts button',box).forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.o;$$('.quiz-opts button',box).forEach(x=>{x.disabled=true;if(+x.dataset.o===q.a)x.classList.add('ok');});if(i!==q.a)b.classList.add('no');else score++;
+   $('#quiz-exp').innerHTML=`${i===q.a?'Isso mesmo! ':'Quase! '}${q.e}<br><button type="button" class="btn btn-primary btn-sm" id="quiz-next" style="margin-top:10px">${step<2?'Próxima':'Ver resultado'}</button>`;
+   $('#quiz-next').addEventListener('click',()=>{step++;if(step<3)show();else{store.setItem('animaltheus_quiz_v1',JSON.stringify({day:d,score}));end(score);}});}));};
+ if(done.day===d)end(done.score);else show();
+})();
+
 /* ligações da página */
 (function wireV5(){
  const hero=$('#hero-mascot');let cur='verquito';
@@ -612,7 +697,7 @@ function renderStickers(){
 }
 function postText(text,onFail,extra){
  const tid=activeTopicId;if(!tid||!text)return;
- const preview=stickerOf(text)?'Figurinha':(extra?.image&&text==='Foto'?'Foto':text.slice(0,120));
+ const preview=stickerOf(text)?'Figurinha':(extra?.image&&text==='Foto'?'Foto':text.slice(0,120));setTimeout(()=>maybeMascotReply(tid,text),0);
  try{
   if(firebaseReady){
    const F=firebaseFns;
@@ -648,17 +733,17 @@ function drawMessages(){
  if(!scroll.dataset.del){scroll.dataset.del='1';scroll.addEventListener('click',e=>{const b=e.target.closest('[data-del-msg]');if(b)deleteMessage(b.dataset.delMsg);});scroll.addEventListener('scroll',()=>$('#jump-bottom')?.classList.toggle('hidden',near()),{passive:true});}
  const stick=!scroll.dataset.ready||near();scroll.dataset.ready='1';
  const topic=topics.find(t=>t.id===activeTopicId)||{};
- if(!activeMessages.length){scroll.innerHTML=`<div class="welcome-chat"><span class="welcome-chat-mark">${verquitoMini(40)}</span><h4>A conversa começa aqui.</h4><p>${escapeHTML(topic.description||'Mande a primeira mensagem ou uma figurinha e ajude a conversa a ganhar vida.')}</p></div>`;}
+ const _all=mergedMsgs();if(!_all.length){scroll.innerHTML=`<div class="welcome-chat"><span class="welcome-chat-mark">${verquitoMini(40)}</span><h4>A conversa começa aqui.</h4><p>${escapeHTML(topic.description||'Mande a primeira mensagem ou uma figurinha e ajude a conversa a ganhar vida.')}</p></div>`;}
  else{
   let html='',prev=null;
-  activeMessages.forEach(m=>{
+  _all.forEach(m=>{
    const t=Number(m.createdAt)||Date.now();
    if(!prev||dayKey(prev.t)!==dayKey(t))html+=`<div class="date-divider">${escapeHTML(dayLabel(t))}</div>`;
    const same=!!prev&&prev.uid===m.userId&&prev.name===m.userName&&t-prev.t<240000&&dayKey(prev.t)===dayKey(t);
    const mine=m.userId===currentUid;cacheProfile(m,mine);const st=stickerOf(m.text);
    const del=canDeleteMessage(m)?`<button type="button" class="msg-del" data-del-msg="${escapeHTML(m.id)}" aria-label="Excluir mensagem" title="Excluir mensagem">${icon('trash',13)}</button>`:'';
    const body=st?`<svg class="sticker" viewBox="-6 -10 132 140" role="img" aria-label="Figurinha"><use href="#st-${st}"/></svg>`:photoBody(m);
-   html+=`<div class="message-row ${mine?'me':''} ${same?'cont':''}">${avatarBtn(m,mine)}<div class="message-main">${same?'':`<div class="message-line"><span class="message-name ${isAdminUid(m.userId)?'is-admin':''}">${escapeHTML(m.userName||'Visitante')}${isAdminUid(m.userId)?verifiedBadge():''}${mine?' · você':''}</span><time class="message-time">${clock(t)}</time></div>`}<div class="bubble-row"><div class="message-bubble ${st?'sticker-bubble':''} ${m.image?'photo-bubble':''}">${body}</div>${del}</div></div></div>`;
+   html+=`<div class="message-row ${mine?'me':''} ${same?'cont':''}">${avatarBtn(m,mine)}<div class="message-main">${same?'':`<div class="message-line"><span class="message-name ${isAdminUid(m.userId)?'is-admin':''}">${escapeHTML(m.userName||'Visitante')}${isAdminUid(m.userId)?verifiedBadge():''}${m.ghost?'<span class="admin-tag">Mascote</span>':''}${mine?' · você':''}</span><time class="message-time">${clock(t)}</time></div>`}<div class="bubble-row"><div class="message-bubble ${st?'sticker-bubble':''} ${m.image?'photo-bubble':''}">${body}</div>${del}</div></div></div>`;
    prev={t,uid:m.userId,name:m.userName};
   });
   scroll.innerHTML=html;
@@ -746,7 +831,7 @@ function subscribeMessages(topicId){
   drawMessages();
  },error=>{console.error(error);showToast(firebaseErrorMessage(error));});
 }
-const canDeleteMessage=m=>isAdmin||!firebaseReady||(!!m.userId&&m.userId===currentUid);
+const canDeleteMessage=m=>!m.ghost&&(isAdmin||!firebaseReady||(!!m.userId&&m.userId===currentUid));
 const canDeleteTopic=t=>isAdmin||!firebaseReady||(!!t.createdBy&&t.createdBy===currentUid);
 let confirmResolve=null;
 function settleConfirm(v){if(!confirmResolve)return;const r=confirmResolve;confirmResolve=null;closeModal('confirm-modal');r(v);}
