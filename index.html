@@ -179,6 +179,19 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
  body.chat-full #header-create span,body.chat-full #copy-topic{display:none}
  .vk-key{height:42px;font-size:16px}
 }
+/* v12: layout do chat à prova de teclado (o painel de figurinhas e o botão de fechar sempre visíveis) */
+body.chat-full .scroll-wrap .conversation-scroll{min-height:0}
+body.chat-full .conversation-head{min-height:0;flex:0 0 auto}
+body.chat-full .composer-area{flex:0 0 auto;max-height:78%;overflow-y:auto;overscroll-behavior:contain}
+body.chat-full .st-scroll{max-height:clamp(84px,calc(var(--vvh,100vh)*.34),300px)}
+body.chat-full .dock-tabs{position:sticky;top:0;z-index:3;background:#241247;padding:2px 0 6px;margin-bottom:4px}
+.dock-tabs .dock-close{min-width:46px;min-height:36px;justify-content:center;border-color:var(--yellow);color:var(--yellow)}
+body.chat-full.kb-open .conversation-head{padding:7px 12px}
+body.chat-full.kb-open .conversation-bigicon,body.chat-full.kb-open .conversation-title-wrap p,body.chat-full.kb-open .composer-user,body.chat-full.kb-open .composer-hint{display:none}
+body.chat-full.kb-open .conversation-title-wrap h3{font-size:14px}
+body.chat-full.kb-open .composer-area{padding:8px 10px 8px}
+body.chat-full.kb-open .dock{margin-top:6px;padding-top:6px}
+body.chat-full.kb-open .st-masc{margin-bottom:6px}
 </style>
 <style>
 .verified-badge{display:inline-flex;vertical-align:-3px;margin-left:4px;width:16px;height:16px;flex:0 0 16px;filter:drop-shadow(0 1px 2px #1d4ed855)}
@@ -1124,7 +1137,7 @@ function setFull(on){
 }
 function toggleFull(){if(isFull()){if(location.hash==='#chat')location.hash='#comunidade';else setFull(false);}else{if(location.hash!=='#chat')location.hash='#chat';else setFull(true);}}
 let dockMode=(()=>{const v=store.getItem('animaltheus_dock_v1');return v==='stickers'?'stickers':'none';})();
-function setDock(m){dockMode=m;store.setItem('animaltheus_dock_v1',m);renderDock();}
+function setDock(m){dockMode=m;store.setItem('animaltheus_dock_v1',m);renderDock();fitViewport();setTimeout(()=>{fitViewport();const sc=$('#conversation-scroll');if(sc)sc.scrollTop=sc.scrollHeight;},60);}
 function wireChatTools(){showAttach();nfSync();
  $('#btn-full').addEventListener('click',toggleFull);
  $('#btn-topics')?.addEventListener('click',()=>document.body.classList.toggle('chat-list-open'));
@@ -1138,7 +1151,7 @@ $('#btn-stickers')?.classList.toggle('on',dockMode==='stickers');
  const hint=$('.composer-hint');
  if(dockMode==='none'){dock.innerHTML='';dock.classList.remove('open');hint?.classList.remove('hidden');return;}
  dock.classList.add('open');hint?.classList.add('hidden');
- dock.innerHTML=`<div class="dock-tabs"><button type="button" class="${dockMode==='stickers'?'on':''}" data-dock="stickers">${icon('sticker',16)} Figurinhas</button><button type="button" class="dock-close" data-dock="none" aria-label="Fechar painel">${icon('down',18)}</button></div><div id="dock-body"></div>`;
+ dock.innerHTML=`<div class="dock-tabs"><button type="button" class="${dockMode==='stickers'?'on':''}" data-dock="stickers">${icon('sticker',16)} Figurinhas</button><button type="button" class="dock-close" data-dock="none" aria-label="Fechar painel">${icon('down',18)} Fechar</button></div><div id="dock-body"></div>`;
  $$('.dock-tabs button',dock).forEach(b=>b.addEventListener('click',()=>setDock(b.dataset.dock)));
  renderStickers();
 }
@@ -1374,8 +1387,14 @@ $('#confirm-ok').addEventListener('click',()=>settleConfirm(true));$('#confirm-c
 const coarse=!!(window.matchMedia&&window.matchMedia('(pointer:coarse)').matches);
 function fitViewport(){
  const c=$('#comunidade');if(!c)return;
- if(!isFull()){c.style.removeProperty('height');c.style.removeProperty('top');return;}
- const v=window.visualViewport;if(v){c.style.height=v.height+'px';c.style.top=v.offsetTop+'px';}
+ if(!isFull()){c.style.removeProperty('height');c.style.removeProperty('top');document.body.classList.remove('kb-open');document.documentElement.style.removeProperty('--vvh');return;}
+ const v=window.visualViewport;
+ if(v){
+  c.style.height=v.height+'px';c.style.top=v.offsetTop+'px';
+  document.documentElement.style.setProperty('--vvh',v.height+'px');
+  const sh=Math.max(screen.height||0,screen.width||0)&&(window.innerWidth>window.innerHeight?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height));
+  document.body.classList.toggle('kb-open',coarse&&!!sh&&v.height<sh*0.72);
+ }
 }
 if(window.visualViewport){visualViewport.addEventListener('resize',()=>{fitViewport();if(isFull()){const sc=$('#conversation-scroll');if(sc&&document.activeElement===$('#message-input'))sc.scrollTop=sc.scrollHeight;}});visualViewport.addEventListener('scroll',()=>{if(isFull())fitViewport();});}
 document.addEventListener('focusin',e=>{
