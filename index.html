@@ -328,6 +328,13 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 .ar-thumb{flex:0 0 64px;height:64px;border-radius:10px;overflow:hidden;background:#2a1560;color:#a897d0;font-size:11px;display:grid;place-items:center}.ar-thumb img{width:100%;height:100%;object-fit:cover}
 .ar-info{flex:1;min-width:160px;color:#d6caf2;font-size:13px}.ar-info ul{margin:6px 0;padding-left:18px}.ar-info p{margin:4px 0;color:#a897d0}
 .ar-act{display:flex;gap:6px;flex-wrap:wrap}.ar-empty{color:#a897d0;font-size:13px}
+
+.online-pill{display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:11.5px;color:#168a52;white-space:nowrap}
+.online-pill:empty{display:none}
+.online-pill:before{content:"";width:7px;height:7px;border-radius:50%;background:#32bd79;box-shadow:0 0 0 3px rgba(50,189,121,.22)}
+.conversation-head p .online-pill{margin-left:8px}
+.gact .admin-del{width:auto;padding:0 10px;gap:5px;font:800 12px var(--font);color:#c0392b}
+@media(prefers-color-scheme:dark){.online-pill{color:#5ee0a0}}
 </style>
 </head>
 <body>
@@ -597,6 +604,40 @@ function showAttach(){const p=$('#attach-preview');if(!p)return;p.innerHTML=pend
 const getSeen=()=>jget(SEEN_KEY,{}),getFavs=()=>jget(FAV_KEY,[]);
 function markSeen(id){const s=getSeen();s[id]=Date.now();store.setItem(SEEN_KEY,JSON.stringify(s));}
 const hostOf=t=>({Periquitos:'verquito',Agapornis:'azulita','Dúvidas':'nevasca'})[t.category]||MKEYS[[...String(t.id)].reduce((a,ch)=>a+ch.charCodeAt(0),0)%3];
+
+/* ===== Presença: quantas pessoas estão online em cada tópico ===== */
+let presenceDocs=[],presenceUnsub=null,presenceTopic=null,presenceBeat=null,presenceTick=null;
+const PRESENCE_BEAT_MS=45000,PRESENCE_TTL_MS=120000;
+function onlineCount(tid){const now=Date.now();return presenceDocs.filter(d=>d.topicId===tid&&now-d.ms<PRESENCE_TTL_MS).length;}
+function onlineLabel(tid){const n=onlineCount(tid);return n?`${n} ${n===1?'pessoa online':'online'}`:'';}
+function refreshOnline(){$$('[data-online]').forEach(el=>{el.textContent=onlineLabel(el.dataset.online);});}
+function presenceWrite(){
+ if(!firebaseReady||!presenceTopic||document.hidden)return;const F=firebaseFns;
+ F.setDoc(F.doc(db,'presence',currentUid),{topicId:presenceTopic,userName,lastSeen:F.serverTimestamp()}).catch(e=>console.warn('Presença:',e));
+}
+function presenceLeave(){
+ if(!firebaseReady||!db)return;const F=firebaseFns;
+ F.deleteDoc(F.doc(db,'presence',currentUid)).catch(()=>{});
+}
+function setPresenceTopic(tid){
+ if(tid===presenceTopic)return;presenceTopic=tid;
+ if(tid)presenceWrite();else presenceLeave();
+ refreshOnline();
+}
+function startPresence(){
+ if(!firebaseReady||presenceUnsub)return;const F=firebaseFns;
+ const since=F.Timestamp.fromMillis(Date.now()-5*60000);
+ presenceUnsub=F.onSnapshot(F.query(F.collection(db,'presence'),F.where('lastSeen','>',since)),snap=>{
+  presenceDocs=snap.docs.map(d=>{const x=d.data({serverTimestamps:'estimate'});return {id:d.id,topicId:x.topicId,ms:x.lastSeen?.toMillis?.()??Date.now()};});
+  refreshOnline();
+ },e=>console.warn('Presença indisponível:',e));
+ presenceBeat=setInterval(presenceWrite,PRESENCE_BEAT_MS);
+ presenceTick=setInterval(refreshOnline,30000);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)presenceLeave();else presenceWrite();});
+ window.addEventListener('pagehide',presenceLeave);
+ presenceWrite();
+}
+function stopPresence(){presenceUnsub?.();presenceUnsub=null;clearInterval(presenceBeat);clearInterval(presenceTick);presenceDocs=[];presenceTopic=null;}
 function drawTopicItems(host,list){
  const favs=getFavs(),seen=getSeen();let dirty=false;
  list=list.filter(t=>topicView==='favoritos'?favs.includes(t.id):topicView==='meus'?(t.createdBy===currentUid):true);
@@ -608,7 +649,7 @@ function drawTopicItems(host,list){
   const mine=t.lastMessageBy===currentUid||t.lastMessageBy===userName;
   const unread=!active&&up>seen[t.id]&&!mine;
   const prev=stickerOf(t.lastMessage)?'Figurinha':(t.lastMessage||t.description||'');
-  return `<button class="topic-item ${active?'active':''} ${unread?'unread':''}" data-topic-id="${escapeHTML(t.id)}">${unread?'<i class="unread-dot"></i>':''}<span class="topic-face">${faceSVG(hostOf(t))}</span><span class="topic-content"><span class="topic-title">${escapeHTML(t.title)}</span><span class="topic-preview">${escapeHTML(prev)}</span><span class="topic-meta"><span class="topic-cat">${escapeHTML(t.category)}</span><span>${escapeHTML(formatDate(t.updatedAt))}</span></span></span><span class="fav ${fav?'on':''}" role="button" tabindex="0" data-fav="${escapeHTML(t.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos favoritos':'Favoritar tópico'}">${icon('star',17)}</span></button>`;
+  return `<button class="topic-item ${active?'active':''} ${unread?'unread':''}" data-topic-id="${escapeHTML(t.id)}">${unread?'<i class="unread-dot"></i>':''}<span class="topic-face">${faceSVG(hostOf(t))}</span><span class="topic-content"><span class="topic-title">${escapeHTML(t.title)}</span><span class="topic-preview">${escapeHTML(prev)}</span><span class="topic-meta"><span class="topic-cat">${escapeHTML(t.category)}</span><span>${escapeHTML(formatDate(t.updatedAt))}</span><span class="online-pill" data-online="${escapeHTML(t.id)}">${onlineLabel(t.id)}</span></span></span><span class="fav ${fav?'on':''}" role="button" tabindex="0" data-fav="${escapeHTML(t.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos favoritos':'Favoritar tópico'}">${icon('star',17)}</span></button>`;
  }).join('');
  if(dirty)store.setItem(SEEN_KEY,JSON.stringify(seen));
 }
@@ -729,7 +770,7 @@ function drawGallery(){
   return `<article class="gcard" data-id="${escapeHTML(p.id)}"><button type="button" class="gimg" data-g="open" aria-label="Abrir foto de ${escapeHTML(p.birdName||'ave')}">${gImg(p)}${p.ghost?'<span class="gtag">Mascote</span>':''}${rc?`<span class="gtag warn">${rc} denúncia${rc>1?'s':''}</span>`:''}</button>
   <div class="gbody"><h4>${escapeHTML(p.birdName||'Ave sem nome')}</h4>${p.caption?`<p>${escapeHTML(p.caption)}</p>`:''}
   <div class="gmeta"><button type="button" class="gauthor" data-prof="${escapeHTML(p.userId)}"><span class="mini-av">${avatarInner(profCache[p.userId]||{},p.userName)}</span>${escapeHTML(p.userName||'Visitante')}</button><span>${p.ghost?'':escapeHTML(formatDate(p.createdAt))}</span></div>
-  <div class="gact"><button type="button" class="${liked?'on':''}" data-g="like" aria-pressed="${liked}" aria-label="Curtir">${icon('heart',18)} ${n}</button><button type="button" data-g="open" aria-label="Comentários">${icon('chat',18)} ${p.commentCount||0}</button>${p.ghost?'':`<button type="button" data-g="report" aria-label="Denunciar" title="Denunciar">${icon('flag',17)}</button>`}${gCanDel(p)?`<button type="button" data-g="del" aria-label="Excluir" title="Excluir">${icon('trash',17)}</button>`:''}</div></div></article>`;
+  <div class="gact"><button type="button" class="${liked?'on':''}" data-g="like" aria-pressed="${liked}" aria-label="Curtir">${icon('heart',18)} ${n}</button><button type="button" data-g="open" aria-label="Comentários">${icon('chat',18)} ${p.commentCount||0}</button>${p.ghost?'':`<button type="button" data-g="report" aria-label="Denunciar" title="Denunciar">${icon('flag',17)}</button>`}${gCanDel(p)?`<button type="button" class="${isAdmin&&p.userId!==currentUid?'admin-del':''}" data-g="del" aria-label="Excluir" title="${isAdmin&&p.userId!==currentUid?'Excluir como administrador':'Excluir'}">${icon('trash',17)}${isAdmin&&p.userId!==currentUid?' Excluir':''}</button>`:''}</div></div></article>`;
  }).join('');
  if(gView)drawView();
 }
@@ -752,7 +793,7 @@ function gToggleLike(id){
  p.likedBy=p.likedBy||[];was?p.likedBy.splice(p.likedBy.indexOf(currentUid),1):p.likedBy.push(currentUid);saveLocal();drawGallery();
 }
 async function gDelete(id){
- const p=gPosts.find(x=>x.id===id);if(!p||!gCanDel(p))return;if(!confirm('Excluir esta foto? Isso não pode ser desfeito.'))return;
+ const p=gPosts.find(x=>x.id===id);if(!p||!gCanDel(p))return;if(!confirm(isAdmin&&p.userId!==currentUid?'Excluir esta foto como administrador? Isso não pode ser desfeito.':'Excluir esta foto? Isso não pode ser desfeito.'))return;
  try{if(gFirebase()){const F=firebaseFns;await F.deleteDoc(F.doc(db,'gallery',id));for(const r of gReports.filter(r=>r.postId===id))await F.deleteDoc(F.doc(db,'reports',r.id)).catch(()=>{});}else{gPosts=gPosts.filter(x=>x.id!==id);saveLocal();drawGallery();}
   if(gView===id)closeModal('gview-modal');showToast('Foto excluída.');}catch(e){console.error(e);showToast('Não foi possível excluir. Confira as regras do Firestore.');}
 }
@@ -923,7 +964,7 @@ function drawConversation(force){
  if(!force&&shellTopicId===topic.id&&$('#conversation-scroll')){drawMessages();return;}
  const draft=$('#message-input')?.value||'';
  const meta=categoryMeta(topic.category);shellTopicId=topic.id;
- $('#conversation-content').innerHTML=`<div class="conversation-head"><div class="conversation-title-wrap"><span class="conversation-bigicon">${icon(meta.icon,21)}</span><div style="min-width:0"><h3>${escapeHTML(topic.title)}</h3><p>${escapeHTML(topic.category)} · iniciado por ${escapeHTML(topic.creatorName||'Membro da comunidade')}${isAdminUid(topic.createdBy)?verifiedBadge():''}</p></div></div><div class="conversation-head-actions"><button type="button" class="round-btn show-topics" id="btn-topics" aria-label="Ver tópicos" title="Tópicos">${icon('hash',16)}</button><button type="button" class="round-btn" id="btn-full" aria-label="Tela cheia" title="Tela cheia">${icon(isFull()?'collapse':'expand',16)}</button>${canDeleteTopic(topic)?`<button type="button" class="round-btn danger" id="delete-topic" title="Excluir tópico" aria-label="Excluir tópico">${icon('trash',16)}</button>`:''}<button type="button" class="round-btn" id="copy-topic" title="Copiar link deste tópico" aria-label="Copiar link do tópico">${icon('external',16)}</button><button type="button" class="btn btn-yellow btn-sm" id="header-create">${icon('plus',15)} <span>Novo tópico</span></button></div></div><div class="scroll-wrap"><div class="conversation-scroll" id="conversation-scroll" aria-live="polite"></div><button type="button" class="jump-bottom hidden" id="jump-bottom" aria-label="Ir para as mensagens novas">${icon('down',20)}</button></div><div class="composer-area"><div class="composer-user"><span class="user-chip"><span class="user-avatar">${avatarInner(profile,userName)}</span><span class="chip-text">Respondendo como <b id="composer-username">${escapeHTML(userName)}</b>${isAdmin?verifiedBadge():''}</span></span><button type="button" class="text-link" id="change-name">Editar perfil</button></div><div class="attach-preview" id="attach-preview"></div><form class="composer" id="message-form" autocomplete="off"><button type="button" class="tool-btn" id="btn-photo" aria-label="Enviar foto" title="Enviar foto">${icon('camera',21)}</button><input type="file" id="photo-input" accept="image/*" hidden><button type="button" class="tool-btn" id="btn-stickers" aria-label="Figurinhas" title="Figurinhas">${icon('sticker',21)}</button><textarea id="message-input" maxlength="1000" rows="1" placeholder="Escreva uma mensagem gentil..." aria-label="Escreva uma mensagem"></textarea><button class="send-btn" id="send-message" type="submit" aria-label="Enviar mensagem">${icon('send',18)}</button></form><div class="composer-hint">${icon('shield',13)} Seja respeitoso. Não compartilhe dados pessoais ou conteúdo ofensivo.</div><div class="dock" id="dock"></div></div>`;
+ $('#conversation-content').innerHTML=`<div class="conversation-head"><div class="conversation-title-wrap"><span class="conversation-bigicon">${icon(meta.icon,21)}</span><div style="min-width:0"><h3>${escapeHTML(topic.title)}</h3><p>${escapeHTML(topic.category)} · iniciado por ${escapeHTML(topic.creatorName||'Membro da comunidade')}${isAdminUid(topic.createdBy)?verifiedBadge():''}<span class="online-pill" data-online="${escapeHTML(topic.id)}">${onlineLabel(topic.id)}</span></p></div></div><div class="conversation-head-actions"><button type="button" class="round-btn show-topics" id="btn-topics" aria-label="Ver tópicos" title="Tópicos">${icon('hash',16)}</button><button type="button" class="round-btn" id="btn-full" aria-label="Tela cheia" title="Tela cheia">${icon(isFull()?'collapse':'expand',16)}</button>${canDeleteTopic(topic)?`<button type="button" class="round-btn danger" id="delete-topic" title="Excluir tópico" aria-label="Excluir tópico">${icon('trash',16)}</button>`:''}<button type="button" class="round-btn" id="copy-topic" title="Copiar link deste tópico" aria-label="Copiar link do tópico">${icon('external',16)}</button><button type="button" class="btn btn-yellow btn-sm" id="header-create">${icon('plus',15)} <span>Novo tópico</span></button></div></div><div class="scroll-wrap"><div class="conversation-scroll" id="conversation-scroll" aria-live="polite"></div><button type="button" class="jump-bottom hidden" id="jump-bottom" aria-label="Ir para as mensagens novas">${icon('down',20)}</button></div><div class="composer-area"><div class="composer-user"><span class="user-chip"><span class="user-avatar">${avatarInner(profile,userName)}</span><span class="chip-text">Respondendo como <b id="composer-username">${escapeHTML(userName)}</b>${isAdmin?verifiedBadge():''}</span></span><button type="button" class="text-link" id="change-name">Editar perfil</button></div><div class="attach-preview" id="attach-preview"></div><form class="composer" id="message-form" autocomplete="off"><button type="button" class="tool-btn" id="btn-photo" aria-label="Enviar foto" title="Enviar foto">${icon('camera',21)}</button><input type="file" id="photo-input" accept="image/*" hidden><button type="button" class="tool-btn" id="btn-stickers" aria-label="Figurinhas" title="Figurinhas">${icon('sticker',21)}</button><textarea id="message-input" maxlength="1000" rows="1" placeholder="Escreva uma mensagem gentil..." aria-label="Escreva uma mensagem"></textarea><button class="send-btn" id="send-message" type="submit" aria-label="Enviar mensagem">${icon('send',18)}</button></form><div class="composer-hint">${icon('shield',13)} Seja respeitoso. Não compartilhe dados pessoais ou conteúdo ofensivo.</div><div class="dock" id="dock"></div></div>`;
  const input=$('#message-input');input.value=draft;
  const grow=()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,110)+'px';};if(draft)grow();
  $('#message-form').addEventListener('submit',sendMessage);
@@ -993,7 +1034,7 @@ async function loadFirebase(){
 }
 function fallbackToDemo(error){
  console.error('Firebase não conectou:',error);
- firebaseReady=false;topicsUnsubscribe?.();messagesUnsubscribe?.();topicsUnsubscribe=messagesUnsubscribe=null;subscribedTopicId=null;shellTopicId=null;
+ stopPresence();firebaseReady=false;topicsUnsubscribe?.();messagesUnsubscribe?.();topicsUnsubscribe=messagesUnsubscribe=null;subscribedTopicId=null;shellTopicId=null;
  updateStatus(false);
  const code=error?.code||'';let msg='Confira a configuração e as regras do Firestore.';
  if(code==='auth/operation-not-allowed'||code==='auth/admin-restricted-operation')msg='Ative o login Anônimo em Authentication > Método de login, no console do Firebase.';
@@ -1012,7 +1053,7 @@ async function initFirebase(){
   try{await auth.authStateReady?.();}catch{}
   let user=auth.currentUser;if(!user){user=(await authMod.signInAnonymously(auth)).user;}
   currentUid=user.uid;isAdmin=!!CONFIG.ADMIN_UID&&currentUid===CONFIG.ADMIN_UID;
-  firebaseReady=true;updateStatus(true);subscribeTopics();subscribeGallery();
+  firebaseReady=true;updateStatus(true);subscribeTopics();subscribeGallery();startPresence();
  }catch(error){fallbackToDemo(error);}
 }
 function subscribeTopics(){
@@ -1022,14 +1063,14 @@ function subscribeTopics(){
   topics=snapshot.docs.map(d=>{const x=d.data({serverTimestamps:'estimate'});const c=x.createdAt?.toMillis?.()??Date.now();return {id:d.id,...x,createdAt:c,updatedAt:x.updatedAt?.toMillis?.()??c};});
   if(!activeTopicId||!topics.some(t=>t.id===activeTopicId))activeTopicId=topics[0]?.id||null;
   drawTopics();
-  if(!activeTopicId){messagesUnsubscribe?.();messagesUnsubscribe=null;subscribedTopicId=null;drawConversationEmpty();}
+  if(!activeTopicId){messagesUnsubscribe?.();messagesUnsubscribe=null;subscribedTopicId=null;setPresenceTopic(null);drawConversationEmpty();}
   else if(activeTopicId!==subscribedTopicId)subscribeMessages(activeTopicId);
   else if(shellTopicId!==activeTopicId)drawConversation();
   if(isAdmin)drawAdminTopics();
  },error=>fallbackToDemo(error));
 }
 function subscribeMessages(topicId){
- if(!firebaseReady)return;messagesUnsubscribe?.();subscribedTopicId=topicId;activeMessages=[];drawConversation();
+ if(!firebaseReady)return;messagesUnsubscribe?.();subscribedTopicId=topicId;activeMessages=[];setPresenceTopic(topicId);drawConversation();
  const F=firebaseFns;const q=F.query(F.collection(db,'topics',topicId,'messages'),F.orderBy('createdAt','asc'),F.limit(300));
  messagesUnsubscribe=F.onSnapshot(q,snapshot=>{
   if(activeTopicId!==topicId)return;
