@@ -399,6 +399,20 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 .mc-traits .icon{width:14px;height:14px;color:var(--yellow)}
 .mc-stk{margin-top:auto;display:flex;gap:4px;border-top:1px dashed #46298a;padding-top:12px}.mc-stk svg{flex:1;min-width:0;height:auto;overflow:visible}
 @media(max-width:860px){.mc-grid{grid-template-columns:1fr}.mc-art{min-height:230px}}
+
+/* ===== v11: avisos de nova mensagem ===== */
+.nf-stack{position:fixed;z-index:95;top:calc(env(safe-area-inset-top,0px) + 92px);right:18px;width:min(360px,calc(100vw - 28px));display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.nf-card{pointer-events:auto;position:relative;display:flex;align-items:center;gap:12px;padding:12px 40px 14px 12px;border-radius:18px;background:rgba(36,18,71,.96);border:1px solid #5a3aa8;box-shadow:0 18px 50px #000a,0 0 0 1px #ffd53822;color:#f4edff;cursor:pointer;overflow:hidden;animation:nf-in .34s cubic-bezier(.2,.9,.3,1.2) both;backdrop-filter:blur(12px)}
+.nf-card:hover{border-color:var(--yellow)}.nf-card.out{animation:nf-out .26s ease-in both}
+.nf-av{flex:0 0 42px;height:42px;border-radius:14px;overflow:hidden;background:var(--yellow);color:#2a1260;display:grid;place-items:center;font:800 14px var(--display)}.nf-av svg,.nf-av img{width:100%;height:100%;object-fit:cover;display:block}
+.nf-txt{min-width:0;display:flex;flex-direction:column;gap:3px}.nf-top{display:flex;align-items:center;gap:8px;min-width:0}.nf-top b{font:800 13px var(--display);letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
+.nf-chip{display:inline-flex;align-items:center;gap:4px;min-width:0;font:700 10px var(--font);color:#ffd538;background:#3d2385;border-radius:100px;padding:2px 8px 2px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nf-chip .icon{width:12px;height:12px;flex:0 0 auto}
+.nf-msg{font-size:13px;color:#d9ccf5;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nf-x{position:absolute;top:8px;right:8px;width:26px;height:26px;border:0;border-radius:9px;background:transparent;color:#bcaedc;display:grid;place-items:center}.nf-x:hover{background:#3d2385;color:#fff}
+.nf-bar{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--yellow);transform-origin:left;animation:nf-bar 7s linear both}.nf-card.hold .nf-bar{animation-play-state:paused}
+@keyframes nf-in{from{opacity:0;transform:translateX(30px) scale(.96)}to{opacity:1;transform:none}}@keyframes nf-out{to{opacity:0;transform:translateX(30px) scale(.96)}}@keyframes nf-bar{to{transform:scaleX(0)}}
+@media(max-width:760px){.nf-stack{right:14px;left:14px;width:auto;top:calc(env(safe-area-inset-top,0px) + 78px)}}
+@media(prefers-reduced-motion:reduce){.nf-card,.nf-card.out{animation:none}.nf-bar{animation:none;display:none}}
 </style>
 </head>
 <body>
@@ -1097,13 +1111,55 @@ function drawConversation(force){
  wireChatTools();
  drawMessages();
 }
+/* ===== v11: avisos de nova mensagem ===== */
+var nfKnown,nfTopic,nfStamp,nfStack;
+function nfEnsure(){if(nfStack)return nfStack;nfStack=document.createElement('div');nfStack.className='nf-stack';nfStack.setAttribute('role','region');nfStack.setAttribute('aria-label','Avisos de novas mensagens');nfStack.setAttribute('aria-live','polite');document.body.appendChild(nfStack);return nfStack;}
+function nfPreview(m){if(stickerOf(m.text))return 'Enviou uma figurinha';if(m.image&&(!m.text||m.text==='Foto'))return 'Enviou uma foto';return String(m.text||'').slice(0,110);}
+function nfViewing(tid){
+ if(tid!==activeTopicId||document.visibilityState!=='visible')return false;
+ const sc=$('#conversation-scroll');if(!sc)return false;const r=sc.getBoundingClientRect();
+ const onScreen=r.height>0&&r.top<innerHeight-80&&r.bottom>80;
+ return onScreen&&sc.scrollHeight-sc.scrollTop-sc.clientHeight<140;
+}
+function nfShow(o){
+ const st=nfEnsure();while(st.children.length>=3)st.firstChild.remove();
+ const el=document.createElement('div');el.className='nf-card';el.setAttribute('role','button');el.tabIndex=0;
+ el.innerHTML=`<span class="nf-av">${o.av}</span><span class="nf-txt"><span class="nf-top"><b>${escapeHTML(o.name)}</b><span class="nf-chip">${icon('chat',12)}${escapeHTML(o.topic)}</span></span><span class="nf-msg">${escapeHTML(o.text)}</span></span><button type="button" class="nf-x" aria-label="Fechar aviso">${icon('x',14)}</button><i class="nf-bar"></i>`;
+ let tm;const kill=()=>{clearTimeout(tm);el.classList.add('out');setTimeout(()=>el.remove(),260);};
+ const open=()=>{kill();if(o.tid){selectTopic(o.tid);if(!isFull()){const c=$('#comunidade');c&&c.scrollIntoView({behavior:'smooth'});}}};
+ el.addEventListener('click',e=>{if(e.target.closest('.nf-x'))kill();else open();});
+ el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+ el.addEventListener('mouseenter',()=>{clearTimeout(tm);el.classList.add('hold');});el.addEventListener('mouseleave',()=>{el.classList.remove('hold');tm=setTimeout(kill,3000);});
+ st.appendChild(el);tm=setTimeout(kill,7000);
+}
+function noteMessages(all){
+ const tid=activeTopicId;nfKnown=nfKnown||{};
+ if(nfTopic!==tid||!nfKnown[tid]){nfTopic=tid;nfKnown[tid]=new Set(all.map(m=>m.id));return;}
+ const set=nfKnown[tid];
+ all.forEach(m=>{
+  if(set.has(m.id))return;set.add(m.id);
+  if(m.userId===currentUid||nfViewing(tid))return;
+  cacheProfile(m,false);
+  const t=topics.find(x=>x.id===tid)||{};
+  nfShow({tid,name:m.userName||'Visitante',topic:t.title||'Conversa',text:nfPreview(m),av:avatarInner(profCache[m.userId]||{},m.userName)});
+ });
+}
+function noteTopics(list){
+ nfStamp=nfStamp||{};const first=!Object.keys(nfStamp).length;
+ list.forEach(t=>{
+  const up=Number(t.updatedAt)||0,old=nfStamp[t.id];nfStamp[t.id]=up;
+  if(first||old==null||up<=old||t.id===activeTopicId||!t.lastMessage||t.lastMessageBy===currentUid)return;
+  const who=/^[A-Za-zÀ-ú][^\s]{0,28}(\s[^\s]+){0,2}$/.test(String(t.lastMessageBy||''))&&String(t.lastMessageBy).length<30&&!/^[A-Za-z0-9]{20,}$/.test(String(t.lastMessageBy))?t.lastMessageBy:'Alguém da turma';
+  nfShow({tid:t.id,name:who,topic:t.title||'Conversa',text:nfPreview({text:t.lastMessage}),av:faceSVG(hostOf(t))});
+ });
+}
 function drawMessages(){
  const scroll=$('#conversation-scroll');if(!scroll)return;
  const near=()=>scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight<90;
  if(!scroll.dataset.del){scroll.dataset.del='1';scroll.addEventListener('click',e=>{const b=e.target.closest('[data-del-msg]');if(b)deleteMessage(b.dataset.delMsg);});scroll.addEventListener('scroll',()=>$('#jump-bottom')?.classList.toggle('hidden',near()),{passive:true});}
  const stick=!scroll.dataset.ready||near();scroll.dataset.ready='1';
  const topic=topics.find(t=>t.id===activeTopicId)||{};
- const _all=mergedMsgs();if(!_all.length){scroll.innerHTML=`<div class="welcome-chat"><span class="welcome-chat-mark">${verquitoMini(40)}</span><h4>A conversa começa aqui.</h4><p>${escapeHTML(topic.description||'Mande a primeira mensagem ou uma figurinha e ajude a conversa a ganhar vida.')}</p></div>`;}
+ const _all=mergedMsgs();try{noteMessages(_all);}catch(e){console.warn(e);}if(!_all.length){scroll.innerHTML=`<div class="welcome-chat"><span class="welcome-chat-mark">${verquitoMini(40)}</span><h4>A conversa começa aqui.</h4><p>${escapeHTML(topic.description||'Mande a primeira mensagem ou uma figurinha e ajude a conversa a ganhar vida.')}</p></div>`;}
  else{
   let html='',prev=null;
   _all.forEach(m=>{
@@ -1184,6 +1240,7 @@ function subscribeTopics(){
  const F=firebaseFns;const q=F.query(F.collection(db,'topics'),F.orderBy('updatedAt','desc'),F.limit(100));
  topicsUnsubscribe=F.onSnapshot(q,snapshot=>{
   topics=snapshot.docs.map(d=>{const x=d.data({serverTimestamps:'estimate'});const c=x.createdAt?.toMillis?.()??Date.now();return {id:d.id,...x,createdAt:c,updatedAt:x.updatedAt?.toMillis?.()??c};});
+  try{noteTopics(topics);}catch(e){console.warn(e);}
   if(!activeTopicId||!topics.some(t=>t.id===activeTopicId))activeTopicId=topics[0]?.id||null;
   drawTopics();
   if(!activeTopicId){messagesUnsubscribe?.();messagesUnsubscribe=null;subscribedTopicId=null;setPresenceTopic(null);drawConversationEmpty();}
