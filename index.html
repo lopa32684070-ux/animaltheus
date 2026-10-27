@@ -836,8 +836,8 @@ const MREP=[
  [/\boi\b|ola|bom dia|boa tarde|boa noite|eai/,'verquito','Oi, oi! Bem-vindo ao poleiro! Conta aí: qual ave você tem?']];
 const ghosts={};let lastGhost=0;
 const norm=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-function mergedMsgs(){return activeMessages.concat(ghosts[activeTopicId]||[]).sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0));}
-function maybeMascotReply(tid,text){
+function mergedMsgs(){return activeMessages.slice().sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0));}
+function maybeMascotReply(tid,text){return; /* v12: respostas automáticas dos mascotes desativadas no chat */
  if(!tid||stickerOf(text))return;const now=Date.now();
  if(now-lastGhost<45000)return;
  if(activeMessages.some(x=>x.userId!==currentUid&&!x.ghost&&now-(Number(x.createdAt)||0)<9e5))return;
