@@ -335,6 +335,48 @@ body.chat-full .composer-area{padding-bottom:max(14px,env(safe-area-inset-bottom
 .conversation-head p .online-pill{margin-left:8px}
 .gact .admin-del{width:auto;padding:0 10px;gap:5px;font:800 12px var(--font);color:#c0392b}
 @media(prefers-color-scheme:dark){.online-pill{color:#5ee0a0}}
+
+/* ===== Galeria: novo visual dos posts ===== */
+.gallery-grid{display:block;columns:250px;column-gap:18px}
+.gcard{break-inside:avoid;margin:0 0 18px;border-radius:20px;border-color:#3b2478;box-shadow:0 10px 30px #0004}
+.gcard:hover{transform:none;border-color:#7a4de0;box-shadow:0 16px 38px #0006}
+.gmeta.ghead{padding:12px 14px 10px;justify-content:space-between}
+.gmeta.ghead .gauthor{font-size:13.5px}
+.gmeta.ghead .mini-av{width:30px;height:30px}
+.gimg{aspect-ratio:auto;background:#150a31}
+.gimg img{height:auto;max-height:540px;transition:transform .35s}
+.gimg:hover img{transform:scale(1.035)}
+.gimg .gart{aspect-ratio:1/1}
+.gimg:focus-visible,.gact button:focus-visible{outline:3px solid var(--yellow);outline-offset:-3px}
+.gbody{padding:12px 14px 12px;gap:6px}
+.gbody h4{font-size:17px;line-height:1.25}
+.gbody .gcap{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#cbbdea}
+.gact{margin-top:6px;padding-top:10px;border-top:1px solid #36206f;gap:4px}
+.gact button{border-color:transparent;background:transparent;padding:6px 10px;color:#bfb0e0}
+.gact button:hover{background:#33196f;border-color:transparent;color:#fff}
+.gact button.on{background:#ff5d8622;border-color:transparent}
+.gact [data-g="report"]{margin-left:auto;color:#8e7fb5}
+.gact .admin-del{background:#c0392b22;color:#ff8a7a}
+.gact .admin-del:hover{background:#c0392b55}
+/* ===== Foto aberta: imagem ao lado dos comentários ===== */
+#gview-modal .modal{max-width:560px}
+@media(min-width:860px){
+ #gview-modal .modal{max-width:960px}
+ #gview-modal .modal-body{max-height:84vh;overflow:auto}
+ #gview-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:22px;align-items:start}
+ #gview-body .gv-img{max-height:none;position:sticky;top:0}
+ #gview-body .gv-img img{max-height:74vh}
+ #gview-body .gv-info{margin-top:0}
+ #gview-body .gcom{max-height:320px}
+}
+@media(max-width:560px){
+ .gallery-grid{columns:2;column-gap:10px}
+ .gcard{margin-bottom:10px;border-radius:16px}
+ .gmeta.ghead{padding:9px 10px 8px}.gmeta.ghead>span{display:none}
+ .gbody{padding:10px}.gbody h4{font-size:15px}
+ .gact button{padding:6px 8px}
+}
+@media(prefers-reduced-motion:reduce){.gimg img{transition:none}.gimg:hover img{transform:none}}
 </style>
 </head>
 <body>
@@ -767,9 +809,8 @@ function drawGallery(){
  if(!l.length){host.innerHTML='<div class="empty-topics">Você ainda não postou nenhuma foto.</div>';return;}
  host.innerHTML=l.map(p=>{
   const liked=gLiked(p),n=gCount(p),rc=isAdmin?gRepCount(p.id):0;
-  return `<article class="gcard" data-id="${escapeHTML(p.id)}"><button type="button" class="gimg" data-g="open" aria-label="Abrir foto de ${escapeHTML(p.birdName||'ave')}">${gImg(p)}${p.ghost?'<span class="gtag">Mascote</span>':''}${rc?`<span class="gtag warn">${rc} denúncia${rc>1?'s':''}</span>`:''}</button>
-  <div class="gbody"><h4>${escapeHTML(p.birdName||'Ave sem nome')}</h4>${p.caption?`<p>${escapeHTML(p.caption)}</p>`:''}
-  <div class="gmeta"><button type="button" class="gauthor" data-prof="${escapeHTML(p.userId)}"><span class="mini-av">${avatarInner(profCache[p.userId]||{},p.userName)}</span>${escapeHTML(p.userName||'Visitante')}</button><span>${p.ghost?'':escapeHTML(formatDate(p.createdAt))}</span></div>
+  return `<article class="gcard" data-id="${escapeHTML(p.id)}"><div class="gmeta ghead"><button type="button" class="gauthor" data-prof="${escapeHTML(p.userId)}"><span class="mini-av">${avatarInner(profCache[p.userId]||{},p.userName)}</span>${escapeHTML(p.userName||'Visitante')}</button><span>${p.ghost?'':escapeHTML(formatDate(p.createdAt))}</span></div><button type="button" class="gimg" data-g="open" aria-label="Abrir foto de ${escapeHTML(p.birdName||'ave')}">${gImg(p)}${p.ghost?'<span class="gtag">Mascote</span>':''}${rc?`<span class="gtag warn">${rc} denúncia${rc>1?'s':''}</span>`:''}</button>
+  <div class="gbody"><h4>${escapeHTML(p.birdName||'Ave sem nome')}</h4>${p.caption?`<p class="gcap">${escapeHTML(p.caption)}</p>`:''}
   <div class="gact"><button type="button" class="${liked?'on':''}" data-g="like" aria-pressed="${liked}" aria-label="Curtir">${icon('heart',18)} ${n}</button><button type="button" data-g="open" aria-label="Comentários">${icon('chat',18)} ${p.commentCount||0}</button>${p.ghost?'':`<button type="button" data-g="report" aria-label="Denunciar" title="Denunciar">${icon('flag',17)}</button>`}${gCanDel(p)?`<button type="button" class="${isAdmin&&p.userId!==currentUid?'admin-del':''}" data-g="del" aria-label="Excluir" title="${isAdmin&&p.userId!==currentUid?'Excluir como administrador':'Excluir'}">${icon('trash',17)}${isAdmin&&p.userId!==currentUid?' Excluir':''}</button>`:''}</div></div></article>`;
  }).join('');
  if(gView)drawView();
