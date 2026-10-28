@@ -1021,7 +1021,7 @@ function gList(){
  let l=gPosts.slice();
  if(gSort==='minhas')return l.filter(p=>p.userId===currentUid);
  if(gSort==='curtidas')l.sort((a,b)=>gCount(b)-gCount(a)||b.createdAt-a.createdAt);else l.sort((a,b)=>b.createdAt-a.createdAt);
- l=l.concat(GMASC);return gQuery?l.filter(p=>gNorm([p.birdName,p.userName,p.caption].join(' ')).includes(gQuery)):l;
+ return gQuery?l.filter(p=>gNorm([p.birdName,p.userName,p.caption].join(' ')).includes(gQuery)):l;
 }
 function gImg(p){return p.ghost?`<div class="gart g-${p.art}">${mascotSVG(p.art,'gart-svg')}</div>`:(okImg(p.photo)?`<img src="${p.photo}" alt="Foto de ${escapeHTML(p.birdName||'ave')}, de ${escapeHTML(p.userName||'um membro')}" loading="lazy">`:'');}
 function renderWeekBird(){
@@ -1039,7 +1039,7 @@ function drawGallery(){
  try{renderWeekBird();}catch(e){console.warn(e);}
  const l=gList();gPosts.forEach(gCacheProf);GMASC.forEach(gCacheProf);
  $('#gallery-count').textContent=gPosts.length?`${gPosts.length} ${gPosts.length===1?'foto':'fotos'} da comunidade`:'Seja a primeira pessoa a postar uma foto';
- if(!l.length){host.innerHTML=`<div class="empty-topics">${gQuery?'Nenhuma foto encontrada para essa busca.':'Você ainda não postou nenhuma foto.'}</div>`;return;}
+ if(!l.length){host.innerHTML=`<div class="empty-topics">${gQuery?'Nenhuma foto encontrada para essa busca.':gSort==='minhas'?'Você ainda não postou nenhuma foto.':'Ainda não há fotos na galeria. Seja a primeira pessoa a postar!'}</div>`;return;}
  host.innerHTML=l.map(p=>{
   const liked=gLiked(p),n=gCount(p),rc=isAdmin?gRepCount(p.id):0;
   return `<article class="gcard" data-id="${escapeHTML(p.id)}"><div class="gmeta ghead"><button type="button" class="gauthor" data-prof="${escapeHTML(p.userId)}"><span class="mini-av">${avatarInner(profCache[p.userId]||{},p.userName)}</span>${escapeHTML(p.userName||'Visitante')}</button><span>${p.ghost?'':escapeHTML(formatDate(p.createdAt))}</span></div><button type="button" class="gimg" data-g="open" aria-label="Abrir foto de ${escapeHTML(p.birdName||'ave')}">${gImg(p)}${p.ghost?'<span class="gtag">Mascote</span>':''}${rc?`<span class="gtag warn">${rc} denúncia${rc>1?'s':''}</span>`:''}</button>
