@@ -202,57 +202,7 @@ body.chat-full.kb-open .st-masc{margin-bottom:6px}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-3px);opacity:1}}
 @media(prefers-reduced-motion:reduce){.typing-dots i{animation:none;opacity:.8}.typing-bar{transition:none}}
 body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
-/* ===== v17: mural personalizável ===== */
-.notice{position:relative;background:var(--n-bg,linear-gradient(90deg,#ffd538,#ffc414));color:var(--n-fg,#2a1560);border-bottom:1px solid var(--n-bd,#e8b300);--n-ic-bg:#2a1560;--n-ic-fg:#ffd538}
-.notice.t-violet{--n-bg:linear-gradient(90deg,#6a3bd1,#4b23a6);--n-fg:#fff;--n-bd:#3a1a82;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
-.notice.t-mint{--n-bg:linear-gradient(90deg,#7ee2a8,#54d08c);--n-fg:#0f3d26;--n-bd:#3fb774;--n-ic-bg:#0f3d26;--n-ic-fg:#b8f5d3}
-.notice.t-sky{--n-bg:linear-gradient(90deg,#9bd9ff,#62bdf6);--n-fg:#0b2f52;--n-bd:#3f9fe0;--n-ic-bg:#0b2f52;--n-ic-fg:#d3edff}
-.notice.t-rose{--n-bg:linear-gradient(90deg,#ffbcd5,#ff93bb);--n-fg:#4a0f2b;--n-bd:#f2709f;--n-ic-bg:#4a0f2b;--n-ic-fg:#ffd9e8}
-.notice.t-coral{--n-bg:linear-gradient(90deg,#ffa285,#ff7a68);--n-fg:#3d0f08;--n-bd:#e85d4c;--n-ic-bg:#3d0f08;--n-ic-fg:#ffd6cb}
-.notice.t-night{--n-bg:linear-gradient(90deg,#2a1560,#1a0d3c);--n-fg:#efe7ff;--n-bd:#46298a;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
-.notice-in{flex-wrap:wrap;row-gap:8px}
-.notice-ic{background:var(--n-ic-bg);color:var(--n-ic-fg)}
-.notice-body{flex:1 1 200px;min-width:0}
-.notice-title{display:block;font:800 15px/1.3 var(--display);letter-spacing:-.02em;margin:0 0 2px}
-.notice-body p{margin:0;font:700 14.5px/1.45 var(--font)}
-.notice.s-p .notice-body p{font-size:12.5px}.notice.s-p .notice-title{font-size:13.5px}
-.notice.s-g .notice-body p{font-size:17px}.notice.s-g .notice-title{font-size:19px}
-.notice.s-g .notice-ic{flex-basis:44px;height:44px;border-radius:14px}.notice.s-g .notice-ic svg{width:24px;height:24px}
-.notice.a-c .notice-in{justify-content:center;text-align:center}.notice.a-c .notice-body{flex:0 1 auto}
-.notice-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--n-ic-bg);color:var(--n-ic-fg);font:800 12.5px var(--font);text-decoration:none;white-space:nowrap;transition:transform .15s,filter .15s}
-.notice-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.notice-btn:focus-visible,.notice-x:focus-visible{outline:2px solid currentColor;outline-offset:2px}
-.notice-btn .icon{width:15px;height:15px;color:inherit}
-.notice.dis .notice-in{padding-right:34px}
-.notice-x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;opacity:.7}
-.notice-x:hover{opacity:1;background:rgba(0,0,0,.12)}.notice-x .icon{width:16px;height:16px;color:inherit}
-.adm-prev .notice-x{right:6px}.adm-prev .notice-btn,.adm-prev .notice-x{pointer-events:none}
-.notice.an-pulse .notice-ic svg{animation:ntPulse 1.8s ease-in-out infinite}
-.notice.an-wiggle .notice-ic svg{animation:ntWiggle 2.4s ease-in-out infinite;transform-origin:50% 20%}
-.notice.an-bounce .notice-ic svg{animation:ntBounce 1.6s ease-in-out infinite}
-@keyframes ntPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
-@keyframes ntWiggle{0%,55%,100%{transform:rotate(0)}62%{transform:rotate(-16deg)}72%{transform:rotate(14deg)}82%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}}
-@keyframes ntBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}60%{transform:translateY(0)}75%{transform:translateY(-2px)}}
-@media(prefers-reduced-motion:reduce){.notice .notice-ic svg{animation:none!important}.notice-btn{transition:none}}
-.nt-sec{font:800 11px var(--display);letter-spacing:.1em;text-transform:uppercase;color:#a897d0;margin:22px 0 12px;border-top:1px solid #3a2078;padding-top:14px}
-.nt-group{margin:0 0 16px}.nt-group .adm-lbl{margin-bottom:8px}
-.nt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
-@media(max-width:480px){.nt-row{grid-template-columns:1fr}}
-.nt-in{width:100%;background:#1a0d3c;color:#fff;border:1px solid #46298a;border-radius:12px;padding:10px 12px;font:600 14px var(--font);color-scheme:dark}
-.nt-in:focus{outline:2px solid var(--yellow);outline-offset:1px}
-.nt-in-wrap{display:flex;gap:6px;align-items:center}.nt-in-wrap .text-link{white-space:nowrap;color:var(--yellow)}
-.nt-seg{display:flex;gap:6px;flex-wrap:wrap}
-.nt-seg button{flex:1;min-width:64px;padding:9px 10px;border-radius:12px;border:1.5px solid #46298a;background:#1a0d3c;color:#cdbfee;font:700 12.5px var(--font);cursor:pointer}
-.nt-seg button.on{border-color:var(--yellow);color:var(--yellow);background:#33196f}
-.nt-swatches{display:flex;gap:10px;flex-wrap:wrap}
-.nt-swatches button{width:46px;height:46px;border-radius:14px;border:2px solid #46298a;background:var(--sw);cursor:pointer;display:grid;place-items:center;font:900 18px var(--font);color:transparent}
-.nt-swatches button.on{border-color:#fff;box-shadow:0 0 0 2px var(--yellow);color:var(--sw-fg)}
-.nt-hint{margin:6px 0 0;font:500 12px/1.5 var(--font);color:#a897d0}
-.nt-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px}.nt-head .adm-lbl{margin:0}
-.nt-mini{display:inline-flex;align-items:center;gap:6px;font:700 12.5px var(--font);color:#cdbfee;cursor:pointer}.nt-mini input{width:16px;height:16px;accent-color:#ffd538}
 
-/* v16: seletor de ícones do mural com rolagem */
-.nt-icons{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));max-height:276px;overflow-y:auto;padding:3px;scrollbar-width:thin;scrollbar-color:#5a3aa8 transparent}
-.nt-icons button{min-width:0;font-size:10.5px;text-align:center}
 </style>
 <style>
 .verified-badge{display:inline-flex;vertical-align:-3px;margin-left:4px;width:16px;height:16px;flex:0 0 16px;filter:drop-shadow(0 1px 2px #1d4ed855)}
@@ -575,6 +525,59 @@ body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
 .adm-foot>span{font-size:12px;color:#a897d0}
 
 #nt-text{background:#1a0d3c;color:#fff;border:1px solid #46298a;border-radius:12px;padding:10px 12px;font:600 14px var(--font)}
+/* v16: seletor de ícones do mural com rolagem */
+.nt-icons{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));max-height:276px;overflow-y:auto;padding:3px;scrollbar-width:thin;scrollbar-color:#5a3aa8 transparent}
+.nt-icons button{min-width:0;font-size:10.5px;text-align:center}
+/* ===== v17: mural personalizável ===== */
+.notice{position:relative;background:var(--n-bg,linear-gradient(90deg,#ffd538,#ffc414));color:var(--n-fg,#2a1560);border-bottom:1px solid var(--n-bd,#e8b300);--n-ic-bg:#2a1560;--n-ic-fg:#ffd538}
+.notice.t-violet{--n-bg:linear-gradient(90deg,#6a3bd1,#4b23a6);--n-fg:#fff;--n-bd:#3a1a82;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
+.notice.t-mint{--n-bg:linear-gradient(90deg,#7ee2a8,#54d08c);--n-fg:#0f3d26;--n-bd:#3fb774;--n-ic-bg:#0f3d26;--n-ic-fg:#b8f5d3}
+.notice.t-sky{--n-bg:linear-gradient(90deg,#9bd9ff,#62bdf6);--n-fg:#0b2f52;--n-bd:#3f9fe0;--n-ic-bg:#0b2f52;--n-ic-fg:#d3edff}
+.notice.t-rose{--n-bg:linear-gradient(90deg,#ffbcd5,#ff93bb);--n-fg:#4a0f2b;--n-bd:#f2709f;--n-ic-bg:#4a0f2b;--n-ic-fg:#ffd9e8}
+.notice.t-coral{--n-bg:linear-gradient(90deg,#ffa285,#ff7a68);--n-fg:#3d0f08;--n-bd:#e85d4c;--n-ic-bg:#3d0f08;--n-ic-fg:#ffd6cb}
+.notice.t-night{--n-bg:linear-gradient(90deg,#2a1560,#1a0d3c);--n-fg:#efe7ff;--n-bd:#46298a;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
+.notice-in{flex-wrap:wrap;row-gap:8px}
+.notice-ic{background:var(--n-ic-bg);color:var(--n-ic-fg)}
+.notice-body{flex:1 1 200px;min-width:0}
+.notice-title{display:block;font:800 15px/1.3 var(--display);letter-spacing:-.02em;margin:0 0 2px}
+.notice-body p{margin:0;font:700 14.5px/1.45 var(--font)}
+.notice.s-p .notice-body p{font-size:12.5px}.notice.s-p .notice-title{font-size:13.5px}
+.notice.s-g .notice-body p{font-size:17px}.notice.s-g .notice-title{font-size:19px}
+.notice.s-g .notice-ic{flex-basis:44px;height:44px;border-radius:14px}.notice.s-g .notice-ic svg{width:24px;height:24px}
+.notice.a-c .notice-in{justify-content:center;text-align:center}.notice.a-c .notice-body{flex:0 1 auto}
+.notice-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--n-ic-bg);color:var(--n-ic-fg);font:800 12.5px var(--font);text-decoration:none;white-space:nowrap;transition:transform .15s,filter .15s}
+.notice-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.notice-btn:focus-visible,.notice-x:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.notice-btn .icon{width:15px;height:15px;color:inherit}
+.notice.dis .notice-in{padding-right:34px}
+.notice-x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;opacity:.7}
+.notice-x:hover{opacity:1;background:rgba(0,0,0,.12)}.notice-x .icon{width:16px;height:16px;color:inherit}
+.adm-prev .notice-x{right:6px}.adm-prev .notice-btn,.adm-prev .notice-x{pointer-events:none}
+.notice.an-pulse .notice-ic svg{animation:ntPulse 1.8s ease-in-out infinite}
+.notice.an-wiggle .notice-ic svg{animation:ntWiggle 2.4s ease-in-out infinite;transform-origin:50% 20%}
+.notice.an-bounce .notice-ic svg{animation:ntBounce 1.6s ease-in-out infinite}
+@keyframes ntPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+@keyframes ntWiggle{0%,55%,100%{transform:rotate(0)}62%{transform:rotate(-16deg)}72%{transform:rotate(14deg)}82%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}}
+@keyframes ntBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}60%{transform:translateY(0)}75%{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){.notice .notice-ic svg{animation:none!important}.notice-btn{transition:none}}
+.nt-sec{font:800 11px var(--display);letter-spacing:.1em;text-transform:uppercase;color:#a897d0;margin:22px 0 12px;border-top:1px solid #3a2078;padding-top:14px}
+.nt-group{margin:0 0 16px}.nt-group .adm-lbl{margin-bottom:8px}
+.nt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+@media(max-width:480px){.nt-row{grid-template-columns:1fr}}
+.nt-in{width:100%;background:#1a0d3c;color:#fff;border:1px solid #46298a;border-radius:12px;padding:10px 12px;font:600 14px var(--font);color-scheme:dark}
+.nt-in:focus{outline:2px solid var(--yellow);outline-offset:1px}
+.nt-in-wrap{display:flex;gap:6px;align-items:center}.nt-in-wrap .text-link{white-space:nowrap;color:var(--yellow)}
+.nt-seg{display:flex;gap:6px;flex-wrap:wrap}
+.nt-seg button{flex:1;min-width:64px;padding:9px 10px;border-radius:12px;border:1.5px solid #46298a;background:#1a0d3c;color:#cdbfee;font:700 12.5px var(--font);cursor:pointer}
+.nt-seg button.on{border-color:var(--yellow);color:var(--yellow);background:#33196f}
+.nt-swatches{display:flex;gap:10px;flex-wrap:wrap}
+.nt-swatches button{width:46px;height:46px;border-radius:14px;border:2px solid #46298a;background:var(--sw);cursor:pointer;display:grid;place-items:center;font:900 18px var(--font);color:transparent}
+.nt-swatches button.on{border-color:#fff;box-shadow:0 0 0 2px var(--yellow);color:var(--sw-fg)}
+.nt-hint{margin:6px 0 0;font:500 12px/1.5 var(--font);color:#a897d0}
+.nt-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px}.nt-head .adm-lbl{margin:0}
+.nt-mini{display:inline-flex;align-items:center;gap:6px;font:700 12.5px var(--font);color:#cdbfee;cursor:pointer}.nt-mini input{width:16px;height:16px;accent-color:#ffd538}
+/* v17: ajustes de prioridade */
+.notice-body p{min-width:0;flex:none}
+.notice-in{flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -747,7 +750,7 @@ body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
 <div class="nt-sec">Botão com link</div>
 <div class="nt-row"><div><label class="adm-lbl" for="nt-ltext">Texto do botão <small id="nt-lcount">0/24</small></label><input class="nt-in" id="nt-ltext" maxlength="24" placeholder="Ex.: Participar" autocomplete="off"></div>
 <div><label class="adm-lbl" for="nt-lurl">Endereço do link</label><input class="nt-in" id="nt-lurl" maxlength="300" inputmode="url" placeholder="https://... ou #comunidade" autocomplete="off"></div></div>
-<p class="nt-hint" style="margin:-6px 0 16px">Deixe o endereço vazio para não mostrar o botão. Use <b>#comunidade</b>, <b>#galeria</b> etc. para levar a uma seção do site.</p>
+<p class="nt-hint" style="margin:-6px 0 16px">Deixe o endereço vazio para não mostrar o botão. Pode digitar só <b>animaltheus.com</b> (o https:// entra sozinho) ou <b>#comunidade</b>, <b>#galeria</b> para levar a uma seção do site.</p>
 <div class="nt-sec">Agenda e opções</div>
 <div class="nt-row"><div><label class="adm-lbl" for="nt-start">Aparece a partir de</label><div class="nt-in-wrap"><input class="nt-in" type="datetime-local" id="nt-start"><button type="button" class="text-link" data-nt-clear="nt-start">limpar</button></div></div>
 <div><label class="adm-lbl" for="nt-end">Some em</label><div class="nt-in-wrap"><input class="nt-in" type="datetime-local" id="nt-end"><button type="button" class="text-link" data-nt-clear="nt-end">limpar</button></div></div></div>
@@ -995,7 +998,7 @@ const NT_THEMES=[['sun','Amarelo','#ffd538','#2a1560'],['violet','Roxo','#6a3bd1
 const NT_ANIMS=['none','pulse','wiggle','bounce'],NT_CLOSED_KEY='animaltheus_notice_closed_v1';
 let noticeData=null,noticeUnsub=null,ntDirty=false,ntSt={icon:'megaphone',theme:'sun',size:'m',align:'l',anim:'none'};
 const ntHash=t=>{let h=0;for(const c of String(t))h=(h*31+c.charCodeAt(0))|0;return h;};
-const ntUrl=u=>{u=String(u||'').trim();return(/^https?:\/\/[^\s"'<>]+$/i.test(u)||/^#[\w-]+$/.test(u))?u:'';};
+const ntUrl=u=>{u=String(u||'').trim();if(!/^https?:/i.test(u)&&/^[\w-]+(\.[\w-]+)+([\/?#]\S*)?$/.test(u))u='https://'+u;return(/^https?:\/\/[^\s"'<>]+$/i.test(u)||/^#[\w-]+$/.test(u))?u:'';};
 function ntCfg(o){o=o||{};return {title:String(o.title||'').trim().slice(0,60),text:String(o.text||'').trim().slice(0,300),icon:ntKey(o.icon),showIcon:o.showIcon!==false,theme:NT_THEMES.some(t=>t[0]===o.theme)?o.theme:'sun',size:['p','m','g'].includes(o.size)?o.size:'m',align:o.align==='c'?'c':'l',anim:NT_ANIMS.includes(o.anim)?o.anim:'none',linkText:String(o.linkText||'').trim().slice(0,24),linkUrl:ntUrl(o.linkUrl),dismissible:o.dismissible===true,startAt:Number(o.startAt)||0,endAt:Number(o.endAt)||0,visible:o.visible!==false,rev:Number(o.rev)||0};}
 const ntRev=c=>c.rev?String(c.rev):'h'+ntHash(c.title+'|'+c.text);
 const ntHas=c=>!!(c.title||c.text);
@@ -1022,7 +1025,7 @@ function ntPreview(){
  const c=ntRead();
  $('#nt-prev').innerHTML=ntHas(c)?noticeHTML(c,true):'<p class="dm-empty">Escreva um título ou texto para ver a prévia.</p>';
  const raw=$('#nt-lurl').value.trim();let note='';
- if(raw&&!ntUrl(raw))note='O link precisa começar com https:// (ou # para ir a uma seção do site). Enquanto estiver assim, o botão não aparece.';
+ if(raw&&!ntUrl(raw))note='Link inválido. Use um endereço como animaltheus.com, https://... ou #comunidade. Enquanto estiver assim, o botão não aparece.';
  else if(c.startAt&&c.endAt&&c.endAt<=c.startAt)note='A data de término precisa ser depois da data de início.';
  else if(c.startAt||c.endAt)note=`${c.startAt?'Aparece em '+ntFmt(c.startAt):'Aparece já'}${c.endAt?' e some em '+ntFmt(c.endAt):''}.`;
  $('#nt-note').textContent=note;
@@ -1050,7 +1053,7 @@ document.addEventListener('click',e=>{
  const nx=e.target.closest('[data-notice-x]');if(nx){try{store.setItem(NT_CLOSED_KEY,ntRev(ntCfg(noticeData)));}catch(er){}drawNotice();return;}
  if(e.target.closest('#nt-save')&&isAdmin){
   const c=ntRead();
-  if(c.linkUrl&&!ntUrl(c.linkUrl)){showToast('O link precisa começar com https:// (ou # para ir a uma seção do site).');return;}
+  if(c.linkUrl&&!ntUrl(c.linkUrl)){showToast('Link inválido. Use um endereço como animaltheus.com, https://... ou #comunidade.');return;}
   if(c.startAt&&c.endAt&&c.endAt<=c.startAt){showToast('A data de término precisa ser depois da data de início.');return;}
   const has=ntHas(c);
   saveNotice({...c,linkUrl:ntUrl(c.linkUrl),visible:c.visible&&has,rev:Date.now()}).then(ok=>{if(ok){ntDirty=false;showToast(has?'Mural atualizado.':'Mural esvaziado.');drawAdminSummary();}});}
