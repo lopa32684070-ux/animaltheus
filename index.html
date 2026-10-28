@@ -202,6 +202,54 @@ body.chat-full.kb-open .st-masc{margin-bottom:6px}
 @keyframes tdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-3px);opacity:1}}
 @media(prefers-reduced-motion:reduce){.typing-dots i{animation:none;opacity:.8}.typing-bar{transition:none}}
 body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
+/* ===== v17: mural personalizável ===== */
+.notice{position:relative;background:var(--n-bg,linear-gradient(90deg,#ffd538,#ffc414));color:var(--n-fg,#2a1560);border-bottom:1px solid var(--n-bd,#e8b300);--n-ic-bg:#2a1560;--n-ic-fg:#ffd538}
+.notice.t-violet{--n-bg:linear-gradient(90deg,#6a3bd1,#4b23a6);--n-fg:#fff;--n-bd:#3a1a82;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
+.notice.t-mint{--n-bg:linear-gradient(90deg,#7ee2a8,#54d08c);--n-fg:#0f3d26;--n-bd:#3fb774;--n-ic-bg:#0f3d26;--n-ic-fg:#b8f5d3}
+.notice.t-sky{--n-bg:linear-gradient(90deg,#9bd9ff,#62bdf6);--n-fg:#0b2f52;--n-bd:#3f9fe0;--n-ic-bg:#0b2f52;--n-ic-fg:#d3edff}
+.notice.t-rose{--n-bg:linear-gradient(90deg,#ffbcd5,#ff93bb);--n-fg:#4a0f2b;--n-bd:#f2709f;--n-ic-bg:#4a0f2b;--n-ic-fg:#ffd9e8}
+.notice.t-coral{--n-bg:linear-gradient(90deg,#ffa285,#ff7a68);--n-fg:#3d0f08;--n-bd:#e85d4c;--n-ic-bg:#3d0f08;--n-ic-fg:#ffd6cb}
+.notice.t-night{--n-bg:linear-gradient(90deg,#2a1560,#1a0d3c);--n-fg:#efe7ff;--n-bd:#46298a;--n-ic-bg:#ffd538;--n-ic-fg:#2a1560}
+.notice-in{flex-wrap:wrap;row-gap:8px}
+.notice-ic{background:var(--n-ic-bg);color:var(--n-ic-fg)}
+.notice-body{flex:1 1 200px;min-width:0}
+.notice-title{display:block;font:800 15px/1.3 var(--display);letter-spacing:-.02em;margin:0 0 2px}
+.notice-body p{margin:0;font:700 14.5px/1.45 var(--font)}
+.notice.s-p .notice-body p{font-size:12.5px}.notice.s-p .notice-title{font-size:13.5px}
+.notice.s-g .notice-body p{font-size:17px}.notice.s-g .notice-title{font-size:19px}
+.notice.s-g .notice-ic{flex-basis:44px;height:44px;border-radius:14px}.notice.s-g .notice-ic svg{width:24px;height:24px}
+.notice.a-c .notice-in{justify-content:center;text-align:center}.notice.a-c .notice-body{flex:0 1 auto}
+.notice-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--n-ic-bg);color:var(--n-ic-fg);font:800 12.5px var(--font);text-decoration:none;white-space:nowrap;transition:transform .15s,filter .15s}
+.notice-btn:hover{filter:brightness(1.12);transform:translateY(-1px)}.notice-btn:focus-visible,.notice-x:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.notice-btn .icon{width:15px;height:15px;color:inherit}
+.notice.dis .notice-in{padding-right:34px}
+.notice-x{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;border:0;background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;opacity:.7}
+.notice-x:hover{opacity:1;background:rgba(0,0,0,.12)}.notice-x .icon{width:16px;height:16px;color:inherit}
+.adm-prev .notice-x{right:6px}.adm-prev .notice-btn,.adm-prev .notice-x{pointer-events:none}
+.notice.an-pulse .notice-ic svg{animation:ntPulse 1.8s ease-in-out infinite}
+.notice.an-wiggle .notice-ic svg{animation:ntWiggle 2.4s ease-in-out infinite;transform-origin:50% 20%}
+.notice.an-bounce .notice-ic svg{animation:ntBounce 1.6s ease-in-out infinite}
+@keyframes ntPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.22)}}
+@keyframes ntWiggle{0%,55%,100%{transform:rotate(0)}62%{transform:rotate(-16deg)}72%{transform:rotate(14deg)}82%{transform:rotate(-9deg)}92%{transform:rotate(5deg)}}
+@keyframes ntBounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}60%{transform:translateY(0)}75%{transform:translateY(-2px)}}
+@media(prefers-reduced-motion:reduce){.notice .notice-ic svg{animation:none!important}.notice-btn{transition:none}}
+.nt-sec{font:800 11px var(--display);letter-spacing:.1em;text-transform:uppercase;color:#a897d0;margin:22px 0 12px;border-top:1px solid #3a2078;padding-top:14px}
+.nt-group{margin:0 0 16px}.nt-group .adm-lbl{margin-bottom:8px}
+.nt-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+@media(max-width:480px){.nt-row{grid-template-columns:1fr}}
+.nt-in{width:100%;background:#1a0d3c;color:#fff;border:1px solid #46298a;border-radius:12px;padding:10px 12px;font:600 14px var(--font);color-scheme:dark}
+.nt-in:focus{outline:2px solid var(--yellow);outline-offset:1px}
+.nt-in-wrap{display:flex;gap:6px;align-items:center}.nt-in-wrap .text-link{white-space:nowrap;color:var(--yellow)}
+.nt-seg{display:flex;gap:6px;flex-wrap:wrap}
+.nt-seg button{flex:1;min-width:64px;padding:9px 10px;border-radius:12px;border:1.5px solid #46298a;background:#1a0d3c;color:#cdbfee;font:700 12.5px var(--font);cursor:pointer}
+.nt-seg button.on{border-color:var(--yellow);color:var(--yellow);background:#33196f}
+.nt-swatches{display:flex;gap:10px;flex-wrap:wrap}
+.nt-swatches button{width:46px;height:46px;border-radius:14px;border:2px solid #46298a;background:var(--sw);cursor:pointer;display:grid;place-items:center;font:900 18px var(--font);color:transparent}
+.nt-swatches button.on{border-color:#fff;box-shadow:0 0 0 2px var(--yellow);color:var(--sw-fg)}
+.nt-hint{margin:6px 0 0;font:500 12px/1.5 var(--font);color:#a897d0}
+.nt-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 8px}.nt-head .adm-lbl{margin:0}
+.nt-mini{display:inline-flex;align-items:center;gap:6px;font:700 12.5px var(--font);color:#cdbfee;cursor:pointer}.nt-mini input{width:16px;height:16px;accent-color:#ffd538}
+
 /* v16: seletor de ícones do mural com rolagem */
 .nt-icons{grid-template-columns:repeat(auto-fill,minmax(74px,1fr));max-height:276px;overflow-y:auto;padding:3px;scrollbar-width:thin;scrollbar-color:#5a3aa8 transparent}
 .nt-icons button{min-width:0;font-size:10.5px;text-align:center}
@@ -597,6 +645,7 @@ body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
 <symbol id="n-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.500V5M12 19v2.500M2.500 12H5M19 12h2.500M5.300 5.300l1.800 1.800M16.900 16.900l1.800 1.800M18.700 5.300l-1.800 1.800M7.100 16.900l-1.800 1.800"/></symbol>
 <symbol id="n-moon" viewBox="0 0 24 24"><path d="M20 14.500A8.500 8.500 0 1 1 9.500 4 6.700 6.700 0 0 0 20 14.500Z"/></symbol>
 <symbol id="n-cloud" viewBox="0 0 24 24"><path d="M7 16a4 4 0 0 1-.5-8A5.500 5.500 0 0 1 17 7.500 3.500 3.500 0 0 1 17.500 16Z"/><path d="M9 19l-.8 1.800M13 19l-.8 1.800M17 19l-.8 1.800"/></symbol>
+<symbol id="n-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
 <symbol id="i-verquito" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21.5" fill="#ffe94a"/><path d="M5.5 22C7 11 16 4 27 4.6 18.5 8 14 15 13.6 26 8 27 5 25.5 5.5 22Z" fill="#9bd646"/><g fill="none" stroke="#1f3a14" stroke-width="1.5" stroke-linecap="round" opacity=".75"><path d="M10 14q2-2.2 4 0t4 0M8.5 19.5q2-2.2 4 0M16 8.6q2-2 4 0t4 0"/></g><circle cx="27.5" cy="19" r="6" fill="#fffdf0"/><circle cx="28.8" cy="19.6" r="3.7" fill="#17142a"/><circle cx="30.2" cy="18" r="1.3" fill="#fff"/><path d="M32 27c4-2.4 10-.8 10 4s-6 6-10.5 3.6Z" fill="#f5a550"/><ellipse cx="37" cy="26.5" rx="6" ry="4.4" fill="#6ea4f2"/><ellipse cx="29" cy="35.5" rx="5.2" ry="2.8" fill="#5b57e8" transform="rotate(20 29 35.5)"/><circle cx="20.5" cy="37" r="1.5" fill="#1b1730"/><circle cx="25" cy="41" r="1.5" fill="#1b1730"/></symbol>
 
 <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M18.7 5.3l-1.8 1.8M7.1 16.9l-1.8 1.8"/></symbol>
@@ -685,7 +734,27 @@ body.chat-full.kb-open .typing-bar{min-height:20px;padding:2px 14px 3px}
 <div class="modal-backdrop" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-modal-title"><div class="modal"><div class="modal-head"><div><div class="modal-kicker">Área restrita</div><h3 id="admin-modal-title">Painel da comunidade</h3></div><button class="close-modal" data-close="admin-modal" aria-label="Fechar"><svg class="icon"><use href="#i-x"/></svg></button></div><div class="modal-body"><div class="admin-note" id="admin-note">A área administrativa usa autenticação do Firebase. Configure uma conta de administrador com sua senha e defina o UID dela nas regras do Firestore. A senha não fica gravada no HTML público.</div><form id="admin-login-form"><div class="form-error" id="admin-error"></div><div class="field"><label for="admin-email">E-mail do administrador</label><input id="admin-email" type="email" autocomplete="username" placeholder="Seu e-mail cadastrado no Firebase" required></div><div class="field"><label for="admin-password">Senha</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="Senha da conta de administrador" required></div><div class="modal-actions"><button class="btn btn-primary" type="submit"><svg class="icon"><use href="#i-lock"/></svg> Entrar no painel</button></div></form><div class="admin-dashboard" id="admin-dashboard">
 <div class="adm-tabs" role="tablist"><button type="button" class="on" data-adm-tab="resumo">Resumo</button><button type="button" data-adm-tab="mural">Mural</button><button type="button" data-adm-tab="topicos">Tópicos</button><button type="button" data-adm-tab="denuncias">Denúncias<i id="adm-rep-badge"></i></button></div>
 <section class="adm-pane on" data-adm-pane="resumo"><div class="admin-stats adm-grid"><div class="admin-stat"><strong id="admin-topic-total">0</strong><span>Tópicos criados</span></div><div class="admin-stat"><strong id="adm-photos">0</strong><span>Fotos na galeria</span></div><div class="admin-stat"><strong id="adm-reports-n">0</strong><span>Fotos denunciadas</span></div><div class="admin-stat"><strong id="adm-online">0</strong><span>Pessoas online agora</span></div></div><div class="admin-stat adm-line"><span>Mural de avisos</span><strong id="adm-notice-state">Vazio</strong></div></section>
-<section class="adm-pane" data-adm-pane="mural"><label class="adm-lbl" for="nt-text">Texto do aviso <small id="nt-count">0/300</small></label><textarea id="nt-text" maxlength="300" placeholder="Ex.: Foto da semana: mande a sua ave azul até domingo!"></textarea><span class="adm-lbl" style="margin-top:14px">Ícone ao lado do texto</span><div class="nt-icons" id="nt-icons"></div><label class="adm-switch"><input type="checkbox" id="nt-visible" checked><span>Mostrar o mural no site<small>Desmarque para ocultar sem apagar o texto.</small></span></label><span class="adm-lbl">Prévia</span><div class="adm-prev" id="nt-prev"></div><button type="button" class="btn btn-yellow" id="nt-save">Salvar mural</button></section>
+<section class="adm-pane" data-adm-pane="mural"><div id="nt-form">
+<label class="adm-lbl" for="nt-title">Título <small id="nt-tcount">0/60</small></label><input class="nt-in" id="nt-title" maxlength="60" placeholder="Opcional. Ex.: Foto da semana" autocomplete="off">
+<div class="nt-head"><label class="adm-lbl" for="nt-text">Texto do aviso</label><small id="nt-count" style="font:600 12px var(--font);color:#a897d0">0/300</small></div><textarea id="nt-text" maxlength="300" placeholder="Ex.: Mande a sua ave azul até domingo!"></textarea>
+<div class="nt-sec">Ícone</div>
+<div class="nt-head" style="margin-top:0"><span class="adm-lbl">Escolha o ícone</span><label class="nt-mini"><input type="checkbox" id="nt-showicon" checked> Mostrar ícone</label></div><div class="nt-icons" id="nt-icons"></div>
+<div class="nt-group"><span class="adm-lbl">Animação do ícone</span><div class="nt-seg" data-nt-seg="anim"><button type="button" data-v="none">Nenhuma</button><button type="button" data-v="pulse">Pulsar</button><button type="button" data-v="wiggle">Balançar</button><button type="button" data-v="bounce">Pular</button></div></div>
+<div class="nt-sec">Aparência</div>
+<div class="nt-group"><span class="adm-lbl">Cor do mural</span><div class="nt-swatches" id="nt-themes"></div></div>
+<div class="nt-row"><div class="nt-group" style="margin:0"><span class="adm-lbl">Tamanho do texto</span><div class="nt-seg" data-nt-seg="size"><button type="button" data-v="p">Pequeno</button><button type="button" data-v="m">Médio</button><button type="button" data-v="g">Grande</button></div></div>
+<div class="nt-group" style="margin:0"><span class="adm-lbl">Alinhamento</span><div class="nt-seg" data-nt-seg="align"><button type="button" data-v="l">Esquerda</button><button type="button" data-v="c">Centro</button></div></div></div>
+<div class="nt-sec">Botão com link</div>
+<div class="nt-row"><div><label class="adm-lbl" for="nt-ltext">Texto do botão <small id="nt-lcount">0/24</small></label><input class="nt-in" id="nt-ltext" maxlength="24" placeholder="Ex.: Participar" autocomplete="off"></div>
+<div><label class="adm-lbl" for="nt-lurl">Endereço do link</label><input class="nt-in" id="nt-lurl" maxlength="300" inputmode="url" placeholder="https://... ou #comunidade" autocomplete="off"></div></div>
+<p class="nt-hint" style="margin:-6px 0 16px">Deixe o endereço vazio para não mostrar o botão. Use <b>#comunidade</b>, <b>#galeria</b> etc. para levar a uma seção do site.</p>
+<div class="nt-sec">Agenda e opções</div>
+<div class="nt-row"><div><label class="adm-lbl" for="nt-start">Aparece a partir de</label><div class="nt-in-wrap"><input class="nt-in" type="datetime-local" id="nt-start"><button type="button" class="text-link" data-nt-clear="nt-start">limpar</button></div></div>
+<div><label class="adm-lbl" for="nt-end">Some em</label><div class="nt-in-wrap"><input class="nt-in" type="datetime-local" id="nt-end"><button type="button" class="text-link" data-nt-clear="nt-end">limpar</button></div></div></div>
+<label class="adm-switch"><input type="checkbox" id="nt-dismiss"><span>Visitantes podem fechar o aviso<small>Aparece um X. O aviso volta quando você salvar uma nova versão.</small></span></label>
+<label class="adm-switch"><input type="checkbox" id="nt-visible" checked><span>Mostrar o mural no site<small>Desmarque para ocultar sem apagar o texto.</small></span></label>
+</div>
+<span class="adm-lbl">Prévia</span><div class="adm-prev" id="nt-prev"></div><p class="nt-hint" id="nt-note" style="margin:-8px 0 16px"></p><button type="button" class="btn btn-yellow" id="nt-save">Salvar mural</button></section>
 <section class="adm-pane" data-adm-pane="topicos"><div id="admin-topic-list"></div></section>
 <section class="adm-pane" data-adm-pane="denuncias"><div id="admin-reports"></div></section>
 <div class="adm-foot"><span>Sessão administrativa: <b id="admin-session-state">Ativa</b></span><div class="modal-actions" style="margin:0"><button class="btn btn-outline" id="admin-logout" type="button">Sair do painel</button><button class="btn btn-primary" id="admin-done" type="button">Concluir</button></div></div></div></div></div></div>
@@ -922,26 +991,72 @@ window.addEventListener('pagehide',typingStop);
 /* ===== Mural de avisos ===== */
 const NOTICE_ICONS=[['megaphone','Aviso'],['bell','Alerta'],['calendar','Evento'],['gift','Novidade'],['star','Destaque'],['bird','Aves'],['alert','Atenção'],['heart','Carinho'],['camera','Foto'],['trophy','Prêmio'],['medal','Parabéns'],['party','Festa'],['sparkles','Brilho'],['flame','Em alta'],['rocket','Lançamento'],['clock','Horário'],['pin','Local'],['info','Informação'],['check','Concluído'],['lock','Fechado'],['flag','Regras'],['shield','Segurança'],['wrench','Manutenção'],['book','Guia'],['chat','Conversa'],['users','Comunidade'],['music','Canto'],['binoculars','Observação'],['feather','Pena'],['egg','Ninho'],['seed','Semente'],['leaf','Natureza'],['sun','Dia'],['moon','Noite'],['cloud','Clima']];
 const ntKey=k=>NOTICE_ICONS.some(i=>i[0]===k)?k:'megaphone';
-let noticeData=null,noticeUnsub=null,ntIcon='megaphone',ntDirty=false;
-const noticeHTML=(text,icon,pad)=>`<div class="notice"><div class="${pad?'notice-in pad':'container notice-in'}"><span class="notice-ic"><svg class="icon"><use href="#n-${ntKey(icon)}"/></svg></span><p>${escapeHTML(text)}</p></div></div>`;
-function drawNotice(){const el=$('#notice-bar');if(!el)return;const t=(noticeData?.text||'').trim();el.innerHTML=(noticeData?.visible!==false&&t)?noticeHTML(t,noticeData?.icon):'';}
+const NT_THEMES=[['sun','Amarelo','#ffd538','#2a1560'],['violet','Roxo','#6a3bd1','#fff'],['mint','Verde','#54d08c','#0f3d26'],['sky','Azul','#5bb8f5','#0b2f52'],['rose','Rosa','#ff8fb8','#4a0f2b'],['coral','Coral','#ff6f61','#3d0f08'],['night','Noturno','#2a1560','#ffd538']];
+const NT_ANIMS=['none','pulse','wiggle','bounce'],NT_CLOSED_KEY='animaltheus_notice_closed_v1';
+let noticeData=null,noticeUnsub=null,ntDirty=false,ntSt={icon:'megaphone',theme:'sun',size:'m',align:'l',anim:'none'};
+const ntHash=t=>{let h=0;for(const c of String(t))h=(h*31+c.charCodeAt(0))|0;return h;};
+const ntUrl=u=>{u=String(u||'').trim();return(/^https?:\/\/[^\s"'<>]+$/i.test(u)||/^#[\w-]+$/.test(u))?u:'';};
+function ntCfg(o){o=o||{};return {title:String(o.title||'').trim().slice(0,60),text:String(o.text||'').trim().slice(0,300),icon:ntKey(o.icon),showIcon:o.showIcon!==false,theme:NT_THEMES.some(t=>t[0]===o.theme)?o.theme:'sun',size:['p','m','g'].includes(o.size)?o.size:'m',align:o.align==='c'?'c':'l',anim:NT_ANIMS.includes(o.anim)?o.anim:'none',linkText:String(o.linkText||'').trim().slice(0,24),linkUrl:ntUrl(o.linkUrl),dismissible:o.dismissible===true,startAt:Number(o.startAt)||0,endAt:Number(o.endAt)||0,visible:o.visible!==false,rev:Number(o.rev)||0};}
+const ntRev=c=>c.rev?String(c.rev):'h'+ntHash(c.title+'|'+c.text);
+const ntHas=c=>!!(c.title||c.text);
+function ntStateLabel(c){c=ntCfg(c||noticeData);const n=Date.now();return !ntHas(c)?'Vazio':!c.visible?'Oculto':(c.startAt&&n<c.startAt)?'Agendado':(c.endAt&&n>c.endAt)?'Expirado':'Visível';}
+const ntClosed=c=>{try{return c.dismissible&&store.getItem(NT_CLOSED_KEY)===ntRev(c);}catch(e){return false;}};
+const noticeHTML=(c,pad)=>{c=ntCfg(c);const ext=c.linkUrl&&!c.linkUrl.startsWith('#');
+ return `<div class="notice t-${c.theme} s-${c.size} a-${c.align} an-${c.anim}${c.dismissible?' dis':''}" role="region" aria-label="Aviso da comunidade"><div class="${pad?'notice-in pad':'container notice-in'}">${c.showIcon?`<span class="notice-ic"><svg class="icon"><use href="#n-${c.icon}"/></svg></span>`:''}<div class="notice-body">${c.title?`<strong class="notice-title">${escapeHTML(c.title)}</strong>`:''}${c.text?`<p>${escapeHTML(c.text)}</p>`:''}</div>${c.linkUrl?`<a class="notice-btn" href="${escapeHTML(c.linkUrl)}"${ext?' target="_blank" rel="noopener noreferrer"':''}>${escapeHTML(c.linkText||'Saiba mais')}<svg class="icon"><use href="#i-arrow"/></svg></a>`:''}</div>${c.dismissible?'<button type="button" class="notice-x" data-notice-x aria-label="Fechar aviso"><svg class="icon"><use href="#n-x"/></svg></button>':''}</div>`;};
+function drawNotice(){const el=$('#notice-bar');if(!el)return;const c=ntCfg(noticeData),n=Date.now();
+ const on=noticeData&&ntHas(c)&&c.visible&&!(c.startAt&&n<c.startAt)&&!(c.endAt&&n>c.endAt)&&!ntClosed(c);
+ const html=on?noticeHTML(c):'';if(el.dataset.h!==html){el.dataset.h=html;el.innerHTML=html;}}
+setInterval(()=>{if(noticeData&&(noticeData.startAt||noticeData.endAt))drawNotice();},30000);
 function subscribeNotice(){noticeUnsub?.();noticeUnsub=null;if(!firebaseReady)return;const F=firebaseFns;noticeUnsub=F.onSnapshot(F.doc(db,'settings','notice'),sn=>{noticeData=sn.exists()?sn.data():null;drawNotice();},e=>console.warn('Mural:',e));}
 async function saveNotice(patch){try{const F=firebaseFns;await F.setDoc(F.doc(db,'settings','notice'),{...patch,updatedAt:F.serverTimestamp()},{merge:true});return true;}catch(e){console.error(e);showToast('Não foi possível salvar o mural. Confira as regras do Firestore.');return false;}}
-function ntPreview(){const t=$('#nt-text').value.trim();$('#nt-count').textContent=`${$('#nt-text').value.length}/300`;$('#nt-prev').innerHTML=t?noticeHTML(t,ntIcon,true):'<p class="dm-empty">Escreva o aviso para ver a prévia.</p>';$$('#nt-icons button').forEach(b=>b.classList.toggle('on',b.dataset.ntIcon===ntIcon));}
-function fillNoticeForm(){$('#nt-icons').innerHTML=NOTICE_ICONS.map(([k,n])=>`<button type="button" data-nt-icon="${k}" aria-label="${n}"><svg class="icon"><use href="#n-${k}"/></svg>${n}</button>`).join('');$('#nt-text').value=noticeData?.text||'';ntIcon=ntKey(noticeData?.icon);$('#nt-visible').checked=noticeData?.visible!==false;ntDirty=false;ntPreview();}
+const ntFmt=ms=>new Date(ms).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+const ntLocal=ms=>{if(!ms)return '';const d=new Date(ms),z=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`;};
+const ntMs=v=>{const t=v?new Date(v).getTime():0;return Number.isFinite(t)?t:0;};
+function ntRead(){return {title:$('#nt-title').value.trim().slice(0,60),text:$('#nt-text').value.trim().slice(0,300),icon:ntSt.icon,showIcon:$('#nt-showicon').checked,theme:ntSt.theme,size:ntSt.size,align:ntSt.align,anim:ntSt.anim,linkText:$('#nt-ltext').value.trim().slice(0,24),linkUrl:$('#nt-lurl').value.trim(),dismissible:$('#nt-dismiss').checked,startAt:ntMs($('#nt-start').value),endAt:ntMs($('#nt-end').value),visible:$('#nt-visible').checked};}
+function ntPreview(){
+ if(!$('#nt-text'))return;
+ $('#nt-count').textContent=`${$('#nt-text').value.length}/300`;$('#nt-tcount').textContent=`${$('#nt-title').value.length}/60`;$('#nt-lcount').textContent=`${$('#nt-ltext').value.length}/24`;
+ $$('#nt-icons button').forEach(b=>{const on=b.dataset.ntIcon===ntSt.icon;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+ $$('#nt-themes button').forEach(b=>{const on=b.dataset.ntTheme===ntSt.theme;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);});
+ $$('[data-nt-seg]').forEach(g=>g.querySelectorAll('button').forEach(b=>{const on=b.dataset.v===ntSt[g.dataset.ntSeg];b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);}));
+ const c=ntRead();
+ $('#nt-prev').innerHTML=ntHas(c)?noticeHTML(c,true):'<p class="dm-empty">Escreva um título ou texto para ver a prévia.</p>';
+ const raw=$('#nt-lurl').value.trim();let note='';
+ if(raw&&!ntUrl(raw))note='O link precisa começar com https:// (ou # para ir a uma seção do site). Enquanto estiver assim, o botão não aparece.';
+ else if(c.startAt&&c.endAt&&c.endAt<=c.startAt)note='A data de término precisa ser depois da data de início.';
+ else if(c.startAt||c.endAt)note=`${c.startAt?'Aparece em '+ntFmt(c.startAt):'Aparece já'}${c.endAt?' e some em '+ntFmt(c.endAt):''}.`;
+ $('#nt-note').textContent=note;
+}
+function fillNoticeForm(){
+ const c=ntCfg(noticeData);ntSt={icon:c.icon,theme:c.theme,size:c.size,align:c.align,anim:c.anim};
+ $('#nt-icons').innerHTML=NOTICE_ICONS.map(([k,n])=>`<button type="button" data-nt-icon="${k}" aria-label="${n}"><svg class="icon"><use href="#n-${k}"/></svg>${n}</button>`).join('');
+ $('#nt-themes').innerHTML=NT_THEMES.map(([k,n,bg,fg])=>`<button type="button" data-nt-theme="${k}" aria-label="${n}" title="${n}" style="--sw:${bg};--sw-fg:${fg}">✓</button>`).join('');
+ $('#nt-title').value=c.title;$('#nt-text').value=c.text;$('#nt-showicon').checked=c.showIcon;
+ $('#nt-ltext').value=c.linkText;$('#nt-lurl').value=c.linkUrl;$('#nt-dismiss').checked=c.dismissible;
+ $('#nt-start').value=ntLocal(c.startAt);$('#nt-end').value=ntLocal(c.endAt);$('#nt-visible').checked=c.visible;
+ ntDirty=false;ntPreview();
+}
 function drawAdminSummary(){if(!$('#adm-photos'))return;const now=Date.now();
  $('#adm-photos').textContent=gPosts.length;const n=new Set(gReports.map(r=>r.postId)).size;$('#adm-reports-n').textContent=n;$('#adm-rep-badge').textContent=n||'';
  $('#adm-online').textContent=presenceDocs.filter(d=>now-d.ms<PRESENCE_TTL_MS).length;
- const t=(noticeData?.text||'').trim();$('#adm-notice-state').textContent=!t?'Vazio':noticeData?.visible===false?'Oculto':'Visível';}
+ $('#adm-notice-state').textContent=ntStateLabel();}
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-adm-tab]');
  if(t){const k=t.dataset.admTab;$$('[data-adm-tab]').forEach(x=>x.classList.toggle('on',x===t));$$('[data-adm-pane]').forEach(x=>x.classList.toggle('on',x.dataset.admPane===k));if(k==='mural'&&!ntDirty)fillNoticeForm();if(k==='resumo')drawAdminSummary();return;}
- const ic=e.target.closest('[data-nt-icon]');if(ic){ntIcon=ic.dataset.ntIcon;ntDirty=true;ntPreview();return;}
- if(e.target.closest('#nt-save')&&isAdmin){const text=$('#nt-text').value.trim().slice(0,300);
-  saveNotice({text,icon:ntIcon,visible:$('#nt-visible').checked&&!!text}).then(ok=>{if(ok){ntDirty=false;showToast(text?'Mural atualizado.':'Mural esvaziado.');drawAdminSummary();}});}
+ const ic=e.target.closest('[data-nt-icon]');if(ic){ntSt.icon=ic.dataset.ntIcon;ntDirty=true;ntPreview();return;}
+ const th=e.target.closest('[data-nt-theme]');if(th){ntSt.theme=th.dataset.ntTheme;ntDirty=true;ntPreview();return;}
+ const sg=e.target.closest('[data-nt-seg] button');if(sg){ntSt[sg.parentElement.dataset.ntSeg]=sg.dataset.v;ntDirty=true;ntPreview();return;}
+ const cl=e.target.closest('[data-nt-clear]');if(cl){const f=$('#'+cl.dataset.ntClear);if(f){f.value='';ntDirty=true;ntPreview();}return;}
+ const nx=e.target.closest('[data-notice-x]');if(nx){try{store.setItem(NT_CLOSED_KEY,ntRev(ntCfg(noticeData)));}catch(er){}drawNotice();return;}
+ if(e.target.closest('#nt-save')&&isAdmin){
+  const c=ntRead();
+  if(c.linkUrl&&!ntUrl(c.linkUrl)){showToast('O link precisa começar com https:// (ou # para ir a uma seção do site).');return;}
+  if(c.startAt&&c.endAt&&c.endAt<=c.startAt){showToast('A data de término precisa ser depois da data de início.');return;}
+  const has=ntHas(c);
+  saveNotice({...c,linkUrl:ntUrl(c.linkUrl),visible:c.visible&&has,rev:Date.now()}).then(ok=>{if(ok){ntDirty=false;showToast(has?'Mural atualizado.':'Mural esvaziado.');drawAdminSummary();}});}
 });
-document.addEventListener('input',e=>{if(e.target.id==='nt-text'){ntDirty=true;ntPreview();}});
-document.addEventListener('change',e=>{if(e.target.id==='nt-visible')ntDirty=true;});
+document.addEventListener('input',e=>{if(e.target.closest&&e.target.closest('#nt-form')){ntDirty=true;ntPreview();}});
+document.addEventListener('change',e=>{if(e.target.closest&&e.target.closest('#nt-form')){ntDirty=true;ntPreview();}});
 
 /* ===== Mensagens privadas ===== */
 let dmDocs=[],dmUnsub=null,dmThreadUnsub=null,dmOpen=null,dmMsgs=[],dmSubbed=false;
