@@ -1115,7 +1115,7 @@ function drawTopicItems(host,list){
   if(seen[t.id]==null||active){seen[t.id]=Date.now();dirty=true;}
   const mine=t.lastMessageBy===currentUid||t.lastMessageBy===userName;
   const unread=!active&&up>seen[t.id]&&!mine;
-  const prev=stickerOf(t.lastMessage)?'Figurinha':(t.lastMessage||t.description||'');
+  const lm=topicLastText(t);const prev=stickerOf(lm)?'Figurinha':lm;
   return `<button class="topic-item ${active?'active':''} ${unread?'unread':''}" data-topic-id="${escapeHTML(t.id)}">${unread?'<i class="unread-dot"></i>':''}<span class="topic-face">${faceSVG(hostOf(t))}</span><span class="topic-content"><span class="topic-title">${escapeHTML(t.title)}</span><span class="topic-preview">${escapeHTML(prev)}</span><span class="topic-meta"><span class="topic-cat">${escapeHTML(t.category)}</span><span>${escapeHTML(formatDate(t.updatedAt))}</span><span class="online-pill" data-online="${escapeHTML(t.id)}">${onlineLabel(t.id)}</span></span></span><span class="fav ${fav?'on':''}" role="button" tabindex="0" data-fav="${escapeHTML(t.id)}" aria-pressed="${fav}" aria-label="${fav?'Remover dos favoritos':'Favoritar tópico'}">${icon('star',17)}</span></button>`;
  }).join('');
  if(dirty)store.setItem(SEEN_KEY,JSON.stringify(seen));
@@ -1374,7 +1374,7 @@ function localLoad(){
 }
 function getLocalMessages(){try{return JSON.parse(store.getItem(LOCAL_MESSAGES_KEY)||"{}")}catch{return {}}}
 function saveLocalMessages(all){store.setItem(LOCAL_MESSAGES_KEY,JSON.stringify(all));}
-function loadLocalMessages(topicId){const all=getLocalMessages();activeMessages=(all[topicId]||[]).slice().sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0));drawConversation();}
+function loadLocalMessages(topicId){const all=getLocalMessages();activeMessages=(all[topicId]||[]).slice().sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0));msgsReady=topicId;drawConversation();}
 function updateStatus(connected){$('#connection-label').textContent=connected?'Firebase conectado · tempo real':'Demonstração interativa';$('#status-dot').style.background=connected?'#32bd79':'#e8ad21';$('#mode-banner').classList.toggle('hidden',connected);}
 function drawTopics(){
  const host=$('#topic-list');const filtered=topics.filter(t=>(selectedCategory==='Todos'||t.category===selectedCategory)&&(`${t.title} ${t.category} ${t.description||''}`).toLocaleLowerCase('pt-BR').includes(searchTerm.toLocaleLowerCase('pt-BR')));
@@ -1685,12 +1685,13 @@ function subscribeTopics(){
  },error=>fallbackToDemo(error));
 }
 function subscribeMessages(topicId){
- if(!firebaseReady)return;messagesUnsubscribe?.();subscribedTopicId=topicId;activeMessages=[];setPresenceTopic(topicId);drawConversation();
+ if(!firebaseReady)return;messagesUnsubscribe?.();subscribedTopicId=topicId;activeMessages=[];msgsReady=null;setPresenceTopic(topicId);drawConversation();
  const F=firebaseFns;const q=F.query(F.collection(db,'topics',topicId,'messages'),F.orderBy('createdAt','asc'),F.limit(300));
  messagesUnsubscribe=F.onSnapshot(q,snapshot=>{
   if(activeTopicId!==topicId)return;
   activeMessages=snapshot.docs.map(d=>{const x=d.data({serverTimestamps:'estimate'});return {id:d.id,...x,createdAt:x.createdAt?.toMillis?.()??Date.now()};});
-  drawMessages();
+  msgsReady=topicId;drawMessages();drawTopics();
+  if(!snapshot.metadata.fromCache&&!snapshot.metadata.hasPendingWrites)syncTopicHead(topicId,activeMessages);
  },error=>{console.error(error);showToast(firebaseErrorMessage(error));});
 }
 const canDeleteMessage=m=>!m.ghost&&(isAdmin||!firebaseReady||(!!m.userId&&m.userId===currentUid));
@@ -1698,6 +1699,27 @@ const canDeleteTopic=t=>isAdmin||!firebaseReady||(!!t.createdBy&&t.createdBy===c
 let confirmResolve=null;
 function settleConfirm(v){if(!confirmResolve)return;const r=confirmResolve;confirmResolve=null;closeModal('confirm-modal');r(v);}
 function askConfirm(title,text){settleConfirm(false);return new Promise(res=>{confirmResolve=res;$('#confirm-title').textContent=title;$('#confirm-text').textContent=text;openModal('confirm-modal');});}
+/* v18: prévia do tópico sempre reflete a última mensagem que realmente existe */
+let msgsReady=null;const healedHeads=new Set();
+const msgPreview=m=>stickerOf(m.text)?'Figurinha':(m.image&&m.text==='Foto'?'Foto':String(m.text||'').slice(0,120));
+const lastReal=list=>list.filter(x=>!x.ghost).slice().sort((a,b)=>(Number(a.createdAt)||0)-(Number(b.createdAt)||0)).pop();
+function topicLastText(t){
+ if(t.id===activeTopicId&&msgsReady===t.id&&activeMessages.length<300){const l=lastReal(activeMessages);return l?msgPreview(l):String(t.description||'').slice(0,120);}
+ return t.lastMessage||t.description||'';
+}
+async function syncTopicHead(tid,list){
+ try{
+  if(list.length>=300)return;
+  const t=topics.find(x=>x.id===tid);if(!t)return;
+  const l=lastReal(list);
+  const text=l?msgPreview(l):String(t.description||'').slice(0,120);
+  const by=l?(l.userId||''):(t.createdBy||'');
+  if((t.lastMessage||'')===text)return;
+  if(!firebaseReady){t.lastMessage=text;t.lastMessageBy=l?(l.userName||''):(t.creatorName||'');store.setItem(LOCAL_TOPICS_KEY,JSON.stringify(topics));drawTopics();return;}
+  const key=tid+'|'+text;if(healedHeads.has(key))return;healedHeads.add(key);
+  const F=firebaseFns;await F.updateDoc(F.doc(db,'topics',tid),{lastMessage:text,lastMessageBy:by});
+ }catch(e){console.warn('Prévia do tópico não atualizada:',e);}
+}
 async function deleteMessage(id){
  const tid=activeTopicId;const m=activeMessages.find(x=>x.id===id);if(!m||!canDeleteMessage(m))return;
  if(!await askConfirm('Excluir mensagem','Essa mensagem será removida da conversa.'))return;
@@ -1705,6 +1727,7 @@ async function deleteMessage(id){
   if(firebaseReady){await firebaseFns.deleteDoc(firebaseFns.doc(db,'topics',tid,'messages',id));}
   else{const all=getLocalMessages();all[tid]=(all[tid]||[]).filter(x=>x.id!==id);saveLocalMessages(all);activeMessages=all[tid];drawMessages();}
   showToast('Mensagem excluída.');
+  syncTopicHead(tid,activeMessages.filter(x=>x.id!==id));drawTopics();
  }catch(error){showToast(firebaseErrorMessage(error));}
 }
 async function deleteTopic(id){
